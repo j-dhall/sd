@@ -1,59 +1,37 @@
 package com.root;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.http.HttpRequest;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- * Servlet implementation class FormServlet
- * https://www.baeldung.com/intro-to-servlets
- * https://www.baeldung.com/intro-to-servlets
- * https://www.baeldung.com/intro-to-servlets
- * https://www.baeldung.com/intro-to-servlets
- * https://www.baeldung.com/intro-to-servlets
+/*
+ * Servlet to display the form asking vital statistics (weight, height, etc)
+ * It also greets the user with name got from the request.
  */
-@WebServlet("/calculateServlet")
+@WebServlet("/formServlet")
 public class FormServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-
-    /**
-     * Default constructor. 
-     */
-    public FormServlet() {
-        // TODO Auto-generated constructor stub
-    }
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		String height = request.getParameter("height");
-        String weight = request.getParameter("weight") ;
-
-        try {
-            double bmi = calculateBMI(
-              Double.parseDouble(weight), 
-              Double.parseDouble(height));
-            
-            request.setAttribute("bmi", bmi);
-            response.setHeader("Test", "Success");
-            response.setHeader("BMI", String.valueOf(bmi));
-
-            RequestDispatcher dispatcher 
-              = request.getRequestDispatcher("index.jsp");
-            dispatcher.forward(request, response);
-        } catch (Exception e) {
-            response.sendRedirect("index.jsp");
-        }
+		response.setContentType("text/html"); //response: Content-Type
+		PrintWriter out = response.getWriter(); //response: writer
+		
+		String userName = request.getParameter("userName"); //get the user's name
+		Cookie ckUserName = new Cookie("userName", userName); //set a cookie for session tracking
+		response.addCookie(ckUserName); //add the cookie to the request
+		
+		//prepare a form for response
+		out.print("Hello " + userName + "!"); //greet the user
+		out.print("<form action=\"calculateServlet\" method=\"post\">  \r\n"
+				+ "Height:<input type=\"text\" name=\"height\"/><br/>  \r\n" //ask for height
+				+ "Weight:<input type=\"text\" name=\"weight\"/><br/>  \r\n" //ask for name
+				+ "<input type=\"submit\" value=\"go\"/>  \r\n"
+				+ "</form>");
+		out.close();
 	}
-
-	private Double calculateBMI(Double weight, Double height) {
-        return weight / (height * height);
-    }
 }
