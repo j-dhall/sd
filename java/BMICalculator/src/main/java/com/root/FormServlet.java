@@ -22,7 +22,7 @@ public class FormServlet extends HttpServlet {
 		PrintWriter out = response.getWriter(); //response: writer
 		
 		String userName = request.getParameter("userName"); //get the user's name
-		Cookie ckUserName = new Cookie("userName", userName); //set a cookie for session tracking
+		Cookie ckUserName = new Cookie("userName", userName); //create a cookie for session tracking
 		response.addCookie(ckUserName); //add the cookie to the request
 		
 		//prepare a form for response
