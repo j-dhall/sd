@@ -10,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class FormServlet
@@ -41,6 +42,13 @@ public class CalculateServlet extends HttpServlet {
 		String height = request.getParameter("height");
         String weight = request.getParameter("weight") ;
 
+        //Method 4: Session Tracking using HTTP Session
+        String uName = null;
+        HttpSession session = request.getSession(false); //get an existing session
+        if (session != null) {
+        	uName = (String) session.getAttribute("uname");
+        }
+        
         try {
             double bmi = calculateBMI(
               Double.parseDouble(weight), 
