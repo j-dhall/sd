@@ -7,6 +7,7 @@ import com.sd.mvc.model.Employee;
 import com.sd.mvc.model.EmployeeDao;
 
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,6 +23,9 @@ public class EmployeeRegisterServlet extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("name", firstName + lastName);
+		
+		ServletContext ctx = request.getSession().getServletContext();
+		ctx.setAttribute("nameGlobal", firstName + lastName);
 		
 		//create an instance of employee from the request parameters
 		//id will be assigned inside the dao

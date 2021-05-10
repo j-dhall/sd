@@ -7,6 +7,7 @@ import com.sd.mvc.model.Employee;
 import com.sd.mvc.model.EmployeeDao;
 
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,8 +21,15 @@ public class EmployeeQueryServlet extends HttpServlet {
 		
 		RequestDispatcher dispatcher = null;
 		
+		//a post /register from Advanced REST Client will set session attribute
+		//but a get from this IDE tab will fetch null, since they are different sessions
 		HttpSession session = request.getSession();
 		String name = (String) session.getAttribute("name");
+		
+		//the servlet context attribute set by a post from Advanced REST Client
+		// is available in a get session from IDE tab
+		ServletContext ctx = request.getSession().getServletContext();
+		String globalName = (String) ctx.getAttribute("nameGlobal");
 		
 		//since we are now not including link.html from here, (instead including from jsp directly), we do not need PrintWrite and out.close() to avoid java.lang.IllegalStateException 
 		//link.html will not show up on top of employee details jsp, better include from the jsp
