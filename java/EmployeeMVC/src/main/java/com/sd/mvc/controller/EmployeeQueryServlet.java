@@ -12,12 +12,16 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/query")
 public class EmployeeQueryServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		RequestDispatcher dispatcher = null;
+		
+		HttpSession session = request.getSession();
+		String name = (String) session.getAttribute("name");
 		
 		//since we are now not including link.html from here, (instead including from jsp directly), we do not need PrintWrite and out.close() to avoid java.lang.IllegalStateException 
 		//link.html will not show up on top of employee details jsp, better include from the jsp

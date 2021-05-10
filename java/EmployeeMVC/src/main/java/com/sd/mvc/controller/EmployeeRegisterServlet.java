@@ -12,12 +12,16 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/register")
 public class EmployeeRegisterServlet extends HttpServlet {
 	protected void doPost (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		String firstName = request.getParameter("firstName"); //get employee first name from the request
 		String lastName = request.getParameter("lastName"); //get employee last name from the request
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("name", firstName + lastName);
 		
 		//create an instance of employee from the request parameters
 		//id will be assigned inside the dao
