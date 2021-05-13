@@ -19,7 +19,7 @@ class FieldResourceInjectionIntegrationTest {
 	//Demo: Resource type dependency injection (DI)
 	//Other DI methods are Inject and Autowired
 	//Resource DI applicable for field and setter
-	//Demo for setter
+	//Demo for field, match by NAME
 	
 	@Resource(name="namedFile")
 	private File defaultFile; //field
