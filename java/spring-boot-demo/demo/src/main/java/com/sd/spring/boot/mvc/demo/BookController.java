@@ -51,10 +51,10 @@ public class BookController {
 	@PutMapping("/{id}")
 	public Book put(@RequestBody Book book, @PathVariable long id) {
 		if (book.getId() != id) {
-			throw new BookIdMismatchException();
+			throw new BookIdMismatchException("EXCEPTION: BOOK ID'S DO NOT MATCH.");
 		}
 		
-		bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
+		bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("EXCEPTION: BOOK NOT FOUND"));
 		return bookRepository.save(book);
 	}
 }
