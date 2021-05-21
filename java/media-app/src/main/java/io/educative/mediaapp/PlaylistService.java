@@ -21,6 +21,14 @@ public class PlaylistService {
 		return playlistRepo.findAll();
 	}
 	
+	public Optional<Playlist> getPlaylist(String name) {
+		Optional<Playlist> playlist = playlistRepo.findByName(name);
+		if(playlist.isEmpty()) {
+			throw new PlaylistNotFoundException(name);
+		}
+		return playlist;
+	}
+	
 	public void getSongs(BigInteger playlistId) {
 		List<Song> songs = entityManager.createNamedQuery("songsByPlaylistId").setParameter(1, playlistId).getResultList();
 		System.out.println(songs);
@@ -30,4 +38,9 @@ public class PlaylistService {
 		Playlist pl = new Playlist(name, new Date());
 		return Optional.of(playlistRepo.save(pl));
 	}
+	
+	public Optional<Playlist> createNewPlaylist(Playlist pl) {
+		return Optional.of(playlistRepo.save(pl));
+	}
+	
 }
