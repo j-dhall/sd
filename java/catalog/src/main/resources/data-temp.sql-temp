@@ -1,0 +1,32 @@
+INSERT INTO `category`
+(
+`name`)
+VALUES
+(
+"Electronics");
+
+
+INSERT INTO `sub_category`
+(
+`category_id`,
+`name`)
+VALUES
+(
+1,
+"Computer Accessories");
+
+
+INSERT INTO `products`
+(
+`name`,
+`description`,
+`image_path`,
+`category_id`,
+`sub_category_id`)
+VALUES
+(
+"Dell Mouse",
+"Mouse from DELL",
+"//dell.png",
+1,
+1);
