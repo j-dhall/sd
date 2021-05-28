@@ -4,8 +4,10 @@ import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,17 +23,17 @@ import lombok.Data;
 @Data
 public class Category {
 	
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
-	BigInteger id;
+	Integer id;
 	
 	@Column(name = "name")
 	@JsonProperty("name")
 	String name;
 	
-	@OneToMany(mappedBy = "category") //objSubCategory.category
+	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL) //objSubCategory.category
 	Set<SubCategory> subCategories = new HashSet<SubCategory>();
 	
-	@OneToMany(mappedBy = "category") //objProduct.category
+	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL) //objProduct.category
 	Set<Product> products = new HashSet<Product>();
 }

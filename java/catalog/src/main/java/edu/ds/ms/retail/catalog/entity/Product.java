@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,9 +20,17 @@ import lombok.Data;
 @Table(name = "product")
 @Data
 public class Product {
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	/*
+	 * https://stackoverflow.com/questions/50659505/spring-boot-project-fails-to-run-because-of-schema-validation-missing-sequence
+	 * 	Hit this issue and below is my searching results:
+		If you use GenerationType.AUTO in your java bean, then by default hibernate uses hibernate_sequence for the sequence.
+		So one option is to create this sequence in the DB by:
+		create sequence <schema>.hibernate_sequence
+		or you can use @GeneratedValue(strategy = GenerationType.IDENTITY) instead in your java bean source code, which does not require such sequence.
+	 */
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
-	BigInteger id;
+	Integer id;
 	
 	@Column(name = "name")
 	@JsonProperty("name")
@@ -35,12 +44,12 @@ public class Product {
 	@JsonProperty("image_path")
 	String imagePath;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
 	@JsonProperty("category_id")
 	Category category;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sub_category_id")
 	@JsonProperty("sub_category_id")
 	SubCategory subCategory;
