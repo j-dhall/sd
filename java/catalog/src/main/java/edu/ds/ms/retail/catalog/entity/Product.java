@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
@@ -47,10 +48,12 @@ public class Product {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
 	@JsonProperty("category_id")
+	//@JsonBackReference
 	Category category;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sub_category_id")
 	@JsonProperty("sub_category_id")
+	//@JsonBackReference
 	SubCategory subCategory;
 }
