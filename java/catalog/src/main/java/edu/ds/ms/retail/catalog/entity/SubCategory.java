@@ -31,21 +31,21 @@ public class SubCategory {
 	@Id
 	Integer id;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "category_id")
+	@JsonProperty("category_id")
+	//@JsonBackReference
+	//@JsonIgnore
+	Category category;
+	
 	@Column(name = "name")
 	@JsonProperty("name")
 	String name;
 	
 	@OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL) //objProduct.subCategory
 	//@JsonManagedReference
-	@JsonIgnore
+	//@JsonIgnore
 	Set<Product> products = new HashSet<Product>();
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_id")
-	@JsonProperty("category_id")
-	//@JsonBackReference
-	@JsonIgnore
-	Category category;
 	
 	public void addProduct(Product product) {
 		product.setSubCategory(this);
@@ -69,7 +69,7 @@ public class SubCategory {
 	@Override
 	public int hashCode() {
 		int result = super.hashCode();
-		//result = 31*result + getId().hashCode();
+		//result = 31*result + getId().hashCode(); //didn't work with GenerationType.IDENTITY 
 		result = 31*result + getName().hashCode();
 		return result;
 	}

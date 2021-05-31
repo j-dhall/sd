@@ -32,17 +32,17 @@ public class Category {
 	@Column(name = "name")
 	@JsonProperty("name")
 	String name;
-
-	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL) //objProduct.category
-	//@JsonManagedReference
-	@JsonIgnore
-	Set<Product> products = new HashSet<Product>();
 	
 	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL) //objSubCategory.category
 	//@JsonManagedReference
 	//@JsonIgnore
 	Set<SubCategory> subCategories = new HashSet<SubCategory>();
 
+	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL) //objProduct.category
+	//@JsonManagedReference
+	//@JsonIgnore
+	Set<Product> products = new HashSet<Product>();
+	
 	public void addSubCategory(SubCategory subCategory) {
 		subCategory.setCategory(this);
 		subCategories.add(subCategory);
@@ -70,7 +70,7 @@ public class Category {
 	@Override
 	public int hashCode() {
 		int result = super.hashCode();
-		//result = 31*result + getId().hashCode();
+		//result = 31*result + getId().hashCode(); //didn't work with GenerationType.IDENTITY
 		result = 31*result + getName().hashCode();
 		return result;
 	}

@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,10 +29,15 @@ import edu.ds.ms.retail.catalog.service.SubCategoryService;
 //I DONT KNOW IF RACE CONDITION IS APPLICABLE. What if there is a context switch to another test case after running product.sql
 //This race condition problem will not be solved if we move cleanup to after the test case.
 //The sql file execution and the test case may not be in the same transaction.
-@Transactional //binds "/product.sql" and test case database inserts into a transaction. If the test case fails, the data added by product.sql is rolled back.
+
+@Transactional //binds the product.sql script and test case database inserts into a transaction. If the test case fails, the data added by product.sql is rolled back.
+
 //It is still better to have a post-test cleanup sql, rather than a pre-test cleanup.
 //Even this is not required. @Transactional deletes all data inserted during a test case run.
 class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
+	
+	@Autowired
+	EntityManager entityManager;
 
 	@Autowired
 	private ProductRepository productRepository;
@@ -53,19 +60,27 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 		Product prod = new Product();
 		prod.setName("Echo");
 		prod.setDescription("Amazon Echo");
-		try {
+		//try {
 			productRepository.save(prod);
 			//2 products, 1 from product.sql, another from productRepository.save(prod)
 			List<Product> products = productRepository.findAll();
 			assertEquals(2, products.size());
-		} catch (Exception e) { //Not useful, see note below
+		//} catch (Exception e) { //Not useful, see note below
 			//NOTE: tried an SQL with foreign key constraints violated, but could not catch SQLIntegrityConstraintViolationException here.
 			//The test case fails and SQLIntegrityConstraintViolationException shows up in the log.
 			//This is probably due to a repository weapper.
 			//Read here: https://stackoverflow.com/questions/54876448/how-to-catch-hibernate-constraintviolationexception-or-spring-dataintegrityviol
-			assertThat(e).isInstanceOf(SQLIntegrityConstraintViolationException.class)
-			.hasMessage("Cannot add or update a child row: a foreign key constraint fails");
-		}	
+			//assertThat(e).isInstanceOf(SQLIntegrityConstraintViolationException.class)
+			//.hasMessage("Cannot add or update a child row: a foreign key constraint fails");
+		//}	
+	}
+	
+	
+	private void checkPersistenceContext(Product prod, Category cat, SubCategory subCat) {
+		boolean contains = entityManager.contains(prod);
+		contains = entityManager.contains(cat);
+		contains = entityManager.contains(subCat);
+		contains = false; //dummy for breakpoint
 	}
 	
 	
@@ -95,14 +110,20 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 		subCat.addProduct(prod);
 		
 		//save
-		//Note: Any of the below 3 calls creates the other 2 entities. E.g. Creating category inserts a product and a subcategory.
-		//Note: The above note is false. Saving product without saving category results in:
+		//False Note: Any of the below 3 calls creates the other 2 entities. E.g. Creating category inserts a product and a subcategory.
+		//Note: The above note is FALSE. Saving product without saving category results in:
 		//java.lang.IllegalStateException: org.hibernate.**TransientPropertyValueException**: 
 		// object references an unsaved transient instance - save the transient instance before flushing : 
 		//edu.ds.ms.retail.catalog.entity.Product.category -> edu.ds.ms.retail.catalog.entity.Category
+		
+		//learning about persistence context
+		checkPersistenceContext(prod, cat, subCat);
 		categoryService.createCategory(cat);
+		checkPersistenceContext(prod, cat, subCat);
 		subCategoryService.createSubCategory(subCat);
+		checkPersistenceContext(prod, cat, subCat);
 		productService.createProduct(prod);
+		checkPersistenceContext(prod, cat, subCat);
 
 		//Note: getAll...() that calls findAll() will throw com.sun.jdi.InvocationException (you can see it in the List<> returned)
 		// if not @Transactional
