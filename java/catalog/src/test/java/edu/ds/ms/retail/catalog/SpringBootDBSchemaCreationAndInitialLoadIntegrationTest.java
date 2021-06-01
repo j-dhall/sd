@@ -20,6 +20,7 @@ import edu.ds.ms.retail.catalog.entity.Category;
 import edu.ds.ms.retail.catalog.entity.Product;
 import edu.ds.ms.retail.catalog.entity.SubCategory;
 import edu.ds.ms.retail.catalog.repository.ProductRepository;
+import edu.ds.ms.retail.catalog.repository.SubCategoryRepository;
 import edu.ds.ms.retail.catalog.service.CategoryService;
 import edu.ds.ms.retail.catalog.service.ProductService;
 import edu.ds.ms.retail.catalog.service.SubCategoryService;
@@ -214,5 +215,30 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 		//categoryService.createCategory(catElectronics); //this creates duplicate products and subcategories
 		subCategoryService.createSubCategory(subcatHomeAppliance);
 		productService.createProduct(prodSpeaker);
+	}
+	
+	@Test
+	void testGetProductByCategoryName() {
+		Product prodTelevision = productService.getProductByCategoryName("Electronics");
+		int a = 0;
+	}
+	
+	@Test
+	void testGetSubCategoryByNameAndCategoryName() {
+		SubCategory subCategory = subCategoryService.getSubCategoryByNameAndCategoryName("Curtains", "Home Furnishing");
+		String categoryName = subCategory.getCategory().getName();
+		int a = 0;
+	}
+	
+	@Test
+	void testGetProductsByCategoryNameAndSubCategoryName() {
+		List<Product> products = productService.getProductsByCategoryNameAndSubCategoryName("Electronics", "Audio");
+		int a = 0;
+	}
+	
+	@Test
+	void testGetProductsByCategoryDescription() {
+		List<Product> products = productService.getProductsByDescription("sound");
+		int a = 0;
 	}
 }

@@ -29,4 +29,8 @@ public class SubCategoryService {
 	public SubCategory getSubCategoryByName(String name) {
 		return subCategoryRepository.findByName(name).orElse(null); //TODO: Throw exception
 	}
+	
+	public SubCategory getSubCategoryByNameAndCategoryName(String name, String categoryName) {
+		return subCategoryRepository.findByNameAndCategoryName(name, categoryName).orElse(null);
+	}
 }

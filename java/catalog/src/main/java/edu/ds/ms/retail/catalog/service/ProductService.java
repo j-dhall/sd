@@ -1,5 +1,7 @@
 package edu.ds.ms.retail.catalog.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,5 +30,19 @@ public class ProductService {
 	
 	public Product getProductByName(String name) {
 		return productRepository.findByName(name).orElse(null); //TODO: Throw exception
+	}
+	
+	public Product getProductByCategoryName(String catName) {
+		return productRepository.findByCategoryName(catName).iterator().next(); //TODO: Throw exception
+	}
+	
+	public List<Product> getProductsByCategoryNameAndSubCategoryName(String catName, String subcatName) {
+		Collection<Product> products = productRepository.findByCategoryNameAndSubCategoryName(catName, subcatName);
+		return new ArrayList<Product>(products);
+	}
+	
+	public List<Product> getProductsByDescription(String keyword) {
+		Collection<Product> products = productRepository.findByDescriptionIgnoreCaseContaining(keyword);
+		return new ArrayList<Product>(products);
 	}
 }
