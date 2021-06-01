@@ -241,4 +241,12 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 		List<Product> products = productService.getProductsByDescription("sound");
 		int a = 0;
 	}
+	
+	@Test
+	void testGetProductsByText() {
+		List<Product> products = productService.getProductsByText("Hi");
+		products = productService.getProductsByText("Speaker");
+		products = productService.getProductsByText("Machine");
+		int a = 0;
+	}
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import edu.ds.ms.retail.catalog.entity.Product;
 import edu.ds.ms.retail.catalog.repository.ProductRepository;
+import edu.ds.ms.retail.catalog.repository.ProductsSpecifications;
 
 @Service
 public class ProductService {
@@ -44,5 +45,9 @@ public class ProductService {
 	public List<Product> getProductsByDescription(String keyword) {
 		Collection<Product> products = productRepository.findByDescriptionIgnoreCaseContaining(keyword);
 		return new ArrayList<Product>(products);
+	}
+	
+	public List<Product> getProductsByText(String text) {
+		return productRepository.findAll(ProductsSpecifications.containsTextInAttributes(text));
 	}
 }

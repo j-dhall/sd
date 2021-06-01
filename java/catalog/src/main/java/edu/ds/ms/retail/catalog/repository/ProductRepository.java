@@ -1,8 +1,10 @@
 package edu.ds.ms.retail.catalog.repository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +16,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	public Collection<Product> findByCategoryName(String catName);
 	public Collection<Product> findByCategoryNameAndSubCategoryName(String catName, String subcatName);
 	public Collection<Product> findByDescriptionIgnoreCaseContaining(String keyword);
+	public List<Product> findAll(Specification<Product> spec);
 }
