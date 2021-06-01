@@ -144,16 +144,16 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 	@Commit //to verify in database if the primary-foreign key relationships got created correctly
 	//@Transactional code not commit the data. So, using @Commit to commit data and verify data.
 	//Without @Transactional, there is no hibernate session (or no objects in the sessions persistence storage), so fetching data results in null pointer exception.
-	void testCreateProductsOfCategoryAndSubcategory() {
-		Category catElectronics = new Category(); //Category: Electronics
+	void testCreateMultipleProductsOfNewCategoryAndSubcategory() {
+		Category catElectronics = new Category(); //New Category: Electronics
 		catElectronics.setName("Electronics");
-		SubCategory subcatAudio = new SubCategory(); //SubCategory: Audio
+		SubCategory subcatAudio = new SubCategory(); //New SubCategory: Audio
 		subcatAudio.setName("Audio");
-		SubCategory subcatVideo = new SubCategory(); //SubCategory: Video
+		SubCategory subcatVideo = new SubCategory(); //New SubCategory: Video
 		subcatVideo.setName("Video");
-		Product prodSpeaker = new Product(); //Product: Speaker
+		Product prodSpeaker = new Product(); //New Product: Speaker
 		prodSpeaker.setName("Speaker");
-		Product prodTV = new Product(); //Product: Television
+		Product prodTV = new Product(); //New Product: Television
 		prodTV.setName("Television");
 		
 		//many-to-one mappings
@@ -164,7 +164,7 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 		subcatAudio.addProduct(prodSpeaker);
 		subcatVideo.addProduct(prodTV);
 		
-		//create categories and products
+		//persist categories and products
 		categoryService.createCategory(catElectronics);
 		subCategoryService.createSubCategory(subcatAudio);
 		subCategoryService.createSubCategory(subcatVideo);
@@ -172,12 +172,47 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 		productService.createProduct(prodTV);
 		
 		//assert relationships
-		Product fetchProd0 = productService.getAllProducts().get(1); //assuming Speaker
-		Product fetchProd1 = productService.getAllProducts().get(0); //assuming Television
+		Product fetchProd0 = productService.getProductByName("Speaker"); //.getAllProducts().get(1); //assuming Speaker
+		Product fetchProd1 = productService.getProductByName("Television"); //getAllProducts().get(0); //assuming Television
 		assertEquals(catElectronics.getName(), fetchProd0.getCategory().getName()); //Assert Electronics category
 		assertEquals(catElectronics.getName(), fetchProd1.getCategory().getName()); //Assert Electronics category
 		assertEquals(subcatAudio.getName(), fetchProd0.getSubCategory().getName()); //Assert Audio subcategory
 		assertEquals(subcatVideo.getName(), fetchProd1.getSubCategory().getName()); //Assert Video subcategory
 	}
 
+	@Test
+	@Commit
+	void testCreateProductOfExistingCategoryAndSubCategory() {
+		Category catElectronics = categoryService.getCategoryByName("Electronics"); //Existing Category: Electronics
+		SubCategory subcatAudio = subCategoryService.getSubCategoryByName("Audio"); //Existing SubCategory: Audio
+		Product prodSpeaker = new Product(); //New Product: Bose Speaker
+		prodSpeaker.setName("Bose Speaker");
+		
+		//many-to-one mappings
+		catElectronics.addProduct(prodSpeaker);
+		subcatAudio.addProduct(prodSpeaker);
+		
+		//persist product
+		productService.createProduct(prodSpeaker);
+	}
+	
+	@Test
+	@Commit
+	void testCreateProductOfExistingCategoryAndNewSubCategory() {
+		Category catElectronics = categoryService.getCategoryByName("Electronics"); //Existing Category: Electronics
+		SubCategory subcatHomeAppliance = new SubCategory(); //New SubCategory: Home Appliance
+		subcatHomeAppliance.setName("Home Appliance");
+		Product prodSpeaker = new Product(); //New Product: Washing Machine
+		prodSpeaker.setName("Washing Machine");
+		
+		//many-to-one mappings
+		catElectronics.addSubCategory(subcatHomeAppliance);
+		catElectronics.addProduct(prodSpeaker);
+		subcatHomeAppliance.addProduct(prodSpeaker);
+		
+		//persist product
+		//categoryService.createCategory(catElectronics); //this creates duplicate products and subcategories
+		subCategoryService.createSubCategory(subcatHomeAppliance);
+		productService.createProduct(prodSpeaker);
+	}
 }

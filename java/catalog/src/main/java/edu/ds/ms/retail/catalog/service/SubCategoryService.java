@@ -25,4 +25,8 @@ public class SubCategoryService {
 	public List<SubCategory> getAllSubCategories () {
 		return subCategoryRepository.findAll();
 	}
+	
+	public SubCategory getSubCategoryByName(String name) {
+		return subCategoryRepository.findByName(name).orElse(null); //TODO: Throw exception
+	}
 }
