@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,17 +95,17 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 		
 		//create sub-category
 		SubCategory subCat = new SubCategory();
-		//subCat.setCategory(cat);
+		//subCat.setCategory(cat); //use Category.addSubCategory()
 		subCat.setName("Audio Systems");
 		
 		//create product
 		Product prod = new Product();
 		prod.setName("Echo");
 		prod.setDescription("Amazon Echo");		
-		//prod.setCategory(cat);
-		//prod.setSubCategory(subCat);
+		//prod.setCategory(cat); //use Category.addProduct()
+		//prod.setSubCategory(subCat); //use SubCategory.addProduct()
 		
-		//set collections
+		//set one-to-many relationships
 		cat.addSubCategory(subCat);
 		cat.addProduct(prod);
 		subCat.addProduct(prod);
@@ -117,13 +118,13 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 		//edu.ds.ms.retail.catalog.entity.Product.category -> edu.ds.ms.retail.catalog.entity.Category
 		
 		//learning about persistence context
-		checkPersistenceContext(prod, cat, subCat);
+		//checkPersistenceContext(prod, cat, subCat);
 		categoryService.createCategory(cat);
-		checkPersistenceContext(prod, cat, subCat);
+		//checkPersistenceContext(prod, cat, subCat);
 		subCategoryService.createSubCategory(subCat);
-		checkPersistenceContext(prod, cat, subCat);
+		//checkPersistenceContext(prod, cat, subCat);
 		productService.createProduct(prod);
-		checkPersistenceContext(prod, cat, subCat);
+		//checkPersistenceContext(prod, cat, subCat);
 
 		//Note: getAll...() that calls findAll() will throw com.sun.jdi.InvocationException (you can see it in the List<> returned)
 		// if not @Transactional
@@ -137,6 +138,46 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 		List<SubCategory> subCategories = subCategoryService.getAllSubCategories();
 		assertEquals(1, categories.size());
 		assertEquals(1, subCategories.size());
+	}
+	
+	@Test
+	@Commit //to verify in database if the primary-foreign key relationships got created correctly
+	//@Transactional code not commit the data. So, using @Commit to commit data and verify data.
+	//Without @Transactional, there is no hibernate session (or no objects in the sessions persistence storage), so fetching data results in null pointer exception.
+	void testCreateProductsOfCategoryAndSubcategory() {
+		Category catElectronics = new Category(); //Category: Electronics
+		catElectronics.setName("Electronics");
+		SubCategory subcatAudio = new SubCategory(); //SubCategory: Audio
+		subcatAudio.setName("Audio");
+		SubCategory subcatVideo = new SubCategory(); //SubCategory: Video
+		subcatVideo.setName("Video");
+		Product prodSpeaker = new Product(); //Product: Speaker
+		prodSpeaker.setName("Speaker");
+		Product prodTV = new Product(); //Product: Television
+		prodTV.setName("Television");
+		
+		//many-to-one mappings
+		catElectronics.addSubCategory(subcatAudio);
+		catElectronics.addSubCategory(subcatVideo);
+		catElectronics.addProduct(prodSpeaker);
+		catElectronics.addProduct(prodTV);
+		subcatAudio.addProduct(prodSpeaker);
+		subcatVideo.addProduct(prodTV);
+		
+		//create categories and products
+		categoryService.createCategory(catElectronics);
+		subCategoryService.createSubCategory(subcatAudio);
+		subCategoryService.createSubCategory(subcatVideo);
+		productService.createProduct(prodSpeaker);
+		productService.createProduct(prodTV);
+		
+		//assert relationships
+		Product fetchProd0 = productService.getAllProducts().get(1); //assuming Speaker
+		Product fetchProd1 = productService.getAllProducts().get(0); //assuming Television
+		assertEquals(catElectronics.getName(), fetchProd0.getCategory().getName()); //Assert Electronics category
+		assertEquals(catElectronics.getName(), fetchProd1.getCategory().getName()); //Assert Electronics category
+		assertEquals(subcatAudio.getName(), fetchProd0.getSubCategory().getName()); //Assert Audio subcategory
+		assertEquals(subcatVideo.getName(), fetchProd1.getSubCategory().getName()); //Assert Video subcategory
 	}
 
 }
