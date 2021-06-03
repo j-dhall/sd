@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,7 +34,8 @@ public class Product {
 	@Id
 	Integer id;
 	
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
+	@NotNull
 	@JsonProperty("name")
 	String name;
 	

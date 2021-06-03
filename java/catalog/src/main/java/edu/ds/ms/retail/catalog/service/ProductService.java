@@ -21,8 +21,8 @@ public class ProductService {
 	@Autowired
 	ProductRepository productRepository;
 	
-	public Optional<Product> createProduct(Product product) {
-		return Optional.of(productRepository.save(product));
+	public Product createProduct(Product product) {
+		return productRepository.save(product);
 	}
 	
 	public List<Product> getAllProducts() {

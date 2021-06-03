@@ -18,17 +18,20 @@ public class SubCategoryService {
 	@Autowired
 	SubCategoryRepository subCategoryRepository;
 	
-	public Optional<SubCategory> createSubCategory(SubCategory subCategory) {
-		return Optional.of(subCategoryRepository.save(subCategory));
+	public SubCategory createSubCategory(SubCategory subCategory) {
+		return subCategoryRepository.save(subCategory);
 	}
 	
 	public List<SubCategory> getAllSubCategories () {
 		return subCategoryRepository.findAll();
 	}
 	
-	public SubCategory getSubCategoryByName(String name) {
+	//subcategory should not be accessible without mentioning category
+	//so, commenting out this method
+	/*
+	private SubCategory getSubCategoryByName(String name) {
 		return subCategoryRepository.findByName(name).orElse(null); //TODO: Throw exception
-	}
+	}*/
 	
 	public SubCategory getSubCategoryByNameAndCategoryName(String name, String categoryName) {
 		return subCategoryRepository.findByNameAndCategoryName(name, categoryName).orElse(null);

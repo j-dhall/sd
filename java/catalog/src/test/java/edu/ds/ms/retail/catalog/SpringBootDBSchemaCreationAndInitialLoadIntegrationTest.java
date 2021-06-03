@@ -53,6 +53,13 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 	@Autowired
 	private SubCategoryService subCategoryService;
 	
+	//run this test with spring.jpa.hibernate.ddl-auto=create in application-test.properties
+	//to have schema created in the database
+	//using java entity classes.
+	@Test
+	void testDummySchemaCreationFromEntities() {
+	}
+	
 	//test the repository layer. intention was to test integrity constraints
 	@Test
 	@Sql(scripts = {"/product.sql"})
@@ -185,7 +192,7 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 	@Commit
 	void testCreateProductOfExistingCategoryAndSubCategory() {
 		Category catElectronics = categoryService.getCategoryByName("Electronics"); //Existing Category: Electronics
-		SubCategory subcatAudio = subCategoryService.getSubCategoryByName("Audio"); //Existing SubCategory: Audio
+		SubCategory subcatAudio = subCategoryService.getSubCategoryByNameAndCategoryName("Audio", "Electronics"); //Existing SubCategory: Audio
 		Product prodSpeaker = new Product(); //New Product: Bose Speaker
 		prodSpeaker.setName("Bose Speaker");
 		

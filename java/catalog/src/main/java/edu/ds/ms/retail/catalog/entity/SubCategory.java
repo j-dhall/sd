@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,15 +33,21 @@ public class SubCategory {
 	Integer id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_id")
+	@JoinColumn(name = "category_id", nullable = false)
+	@NotNull
 	@JsonProperty("category_id")
 	//@JsonBackReference
 	//@JsonIgnore
 	Category category;
 	
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
+	@NotNull
 	@JsonProperty("name")
 	String name;
+	
+	@Column(name = "description")
+	@JsonProperty("description")
+	String description;
 	
 	@OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL) //objProduct.subCategory
 	//@JsonManagedReference

@@ -16,5 +16,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	public Collection<Product> findByCategoryName(String catName);
 	public Collection<Product> findByCategoryNameAndSubCategoryName(String catName, String subcatName);
 	public Collection<Product> findByDescriptionIgnoreCaseContaining(String keyword);
-	public List<Product> findAll(Specification<Product> spec);
+	public List<Product> findAll(Specification<Product> spec); //use ProductSpecifications.containsTextInAttributes()
 }

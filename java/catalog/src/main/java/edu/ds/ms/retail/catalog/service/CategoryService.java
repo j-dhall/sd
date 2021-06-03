@@ -18,8 +18,12 @@ public class CategoryService {
 	@Autowired
 	CategoryRepository categoryRepository;
 	
-	public Optional<Category> createCategory(Category category) {
-		return Optional.of(categoryRepository.save(category));
+	//CrudRepository:save()
+	//throws IllegalArgumentException - in case the given entity is null.
+	//returns the saved entity with id created by the database; will never be null.
+	//so, no need to use Optional.of()
+	public Category createCategory(Category category) {
+		return categoryRepository.save(category);
 	}
 	
 	public List<Category> getAllCategories() {
