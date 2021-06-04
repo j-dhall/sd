@@ -6,10 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
-import javax.persistence.EntityManager;
+//import javax.persistence.EntityManager;
 
 import org.hibernate.PropertyValueException;
-import org.hibernate.SessionFactory;
+//import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,11 +42,11 @@ import edu.ds.ms.retail.catalog.service.SubCategoryService;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @Sql(scripts = {"/test_data.sql"}) //data creation for test case
 //@Sql(scripts = {"/test_data.sql"}, config = @SqlConfig(transactionMode = TransactionMode.ISOLATED)) //data creation for test case
-public class ServiceIntegrationTest {
-	@Autowired
-	EntityManager entityManager;
-	@Autowired
-	SessionFactory sessionFactory;
+public class CreateEntityIntegrationTest {
+	//@Autowired
+	//EntityManager entityManager;
+	//@Autowired
+	//SessionFactory sessionFactory;
 	@Autowired
 	CategoryService categoryService;
 	@Autowired
@@ -65,7 +65,7 @@ public class ServiceIntegrationTest {
 	//CrudRepository:save()
 	//returns the saved entity with id created by the database; will never be null.
 	@Test
-	@Transactional //TODO
+	//@Transactional //TODO
 	void testCreateCategory() {
 		Category cat = new Category();//New Category
 		cat.setName("Home Appliances");
@@ -81,7 +81,7 @@ public class ServiceIntegrationTest {
 	//nested exception is org.hibernate.PropertyValueException: not-null property references a 
 	// null or transient value : edu.ds.ms.retail.catalog.entity.Category.name
 	@Test
-	@Transactional //TODO
+	//@Transactional //TODO
 	void testCreateCategoryWithPropertyValueException() {
 		Category cat = new Category();
 		//cat.setName("Home Appliances");//omitting setting of mandatory field
@@ -97,7 +97,7 @@ public class ServiceIntegrationTest {
 	//CrudRepository:save()
 	//throws IllegalArgumentException - in case the given entity is null.
 	@Test
-	@Transactional //TODO
+	//@Transactional //TODO
 	void testCreateCategoryWithIllegalArgumentException() {
 		try {
 			categoryService.createCategory(null);//passing invalid Category
@@ -110,7 +110,7 @@ public class ServiceIntegrationTest {
 	//throws java.sql.SQLIntegrityConstraintViolationException
 	@Test
 	//@Sql({"/test_data.sql"}) //data creation for test case
-	@Transactional
+	//@Transactional
 	void testCreateDuplicateCategoryWithSQLIntegrityConstraintViolationException() {
 		Category cat = new Category();//New Category
 		cat.setName("Electronics");
@@ -125,7 +125,7 @@ public class ServiceIntegrationTest {
 	
 	//Test: Create SubCategory of a new Category
 	@Test
-	@Transactional //TODO
+	//@Transactional //TODO
 	void testCreateSubCategoryOfNewCategory() {
 		Category cat = new Category();//New Category
 		cat.setName("Home Appliances");
@@ -152,7 +152,7 @@ public class ServiceIntegrationTest {
 	//Test: Create SubCategory of an existing Category
 	@Test
 	//@Sql({"/test_data.sql"}) //data creation for test case
-	@Transactional //- have fetched category in persistence context to use it later to add subcategory to it
+	//@Transactional //- have fetched category in persistence context to use it later to add subcategory to it
 	//@Commit - check subcategory creation in database after the test finishes
 	void testCreateSubCategoryOfExistingCategory() {
 		Category cat = categoryService.getCategoryByName("Books");//Existing Category
@@ -296,13 +296,14 @@ public class ServiceIntegrationTest {
 		assertTrue(subcatSaved.getId() == prodSaved.getSubCategory().getId());//verify foreign-key
 	}
 	
-	
+	/*
 	private void checkPersistenceContext(Product prod, Category cat, SubCategory subCat) {
 		boolean contains = entityManager.contains(prod);
 		contains = entityManager.contains(cat);
 		contains = entityManager.contains(subCat);
 		contains = false; //dummy for breakpoint
 	}
+	*/
 	
 //	@BeforeEach
 //	@Sql({"/test_data.sql"})
