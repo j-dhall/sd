@@ -72,50 +72,52 @@ public class CreateEntityIntegrationTest {
 		cat.setDescription("Electricals used at home, like Washing Machine, Microwave Oven, etc");
 		
 		//Save Category
-		Category catSaved = categoryService.createCategory(cat);
+		Category catSaved = categoryService.saveCategory(cat);
 		assertNotNull(catSaved);
 		assertTrue(catSaved.getId() > 0);
 	}
 	
 	//Test: Try creating Category with missing mandatory name
+	//Throws: PropertyValueException
 	//nested exception is org.hibernate.PropertyValueException: not-null property references a 
 	// null or transient value : edu.ds.ms.retail.catalog.entity.Category.name
 	@Test
 	//@Transactional //TODO
-	void testCreateCategoryWithPropertyValueException() {
+	void testCreateCategoryWithoutName() {
 		Category cat = new Category();
 		//cat.setName("Home Appliances");//omitting setting of mandatory field
 		cat.setDescription("Electricals used at home, like Washing Machine, Microwave Oven, etc");
 		try {
-			categoryService.createCategory(cat);//passing Category without mandatory name
+			categoryService.saveCategory(cat);//passing Category without mandatory name
 		} catch (Exception e) {
 			assertTrue(e.getCause() instanceof PropertyValueException);
 		}
 	}
 
 	//Test: Try creating null category
+	//Throws: IllegalArgumentException
 	//CrudRepository:save()
 	//throws IllegalArgumentException - in case the given entity is null.
 	@Test
 	//@Transactional //TODO
-	void testCreateCategoryWithIllegalArgumentException() {
+	void testCreateCategoryFromNull() {
 		try {
-			categoryService.createCategory(null);//passing invalid Category
+			categoryService.saveCategory(null);//passing invalid Category
 		} catch (Exception e) {
 			assertTrue(e.getCause() instanceof IllegalArgumentException);
 		}
 	}
 	
 	//Test: Try creating duplicate Category (category name should be unique)
-	//throws java.sql.SQLIntegrityConstraintViolationException
+	//Throws: java.sql.SQLIntegrityConstraintViolationException
 	@Test
 	//@Sql({"/test_data.sql"}) //data creation for test case
 	//@Transactional
-	void testCreateDuplicateCategoryWithSQLIntegrityConstraintViolationException() {
+	void testCreateCategoryWithDuplicateName() {
 		Category cat = new Category();//New Category
 		cat.setName("Electronics");
 		try {
-			categoryService.createCategory(cat);//passing Category with name of an existing category
+			categoryService.saveCategory(cat);//passing Category with name of an existing category
 		} catch (Exception e) {
 			assertTrue(e.getCause().getCause() instanceof SQLIntegrityConstraintViolationException);
 		}
@@ -138,12 +140,12 @@ public class CreateEntityIntegrationTest {
 		cat.addSubCategory(subcat);//Many-to-One Category to SubCategory
 		
 		//Save Category
-		Category catSaved = categoryService.createCategory(cat);
+		Category catSaved = categoryService.saveCategory(cat);
 		assertNotNull(catSaved);
 		assertTrue(catSaved.getId() > 0);
 		
 		//Save SubCategory
-		SubCategory subcatSaved = subCategoryService.createSubCategory(subcat);
+		SubCategory subcatSaved = subCategoryService.saveSubCategory(subcat);
 		assertNotNull(subcatSaved);
 		assertTrue(subcatSaved.getId() > 0);
 		assertTrue(catSaved.getId() == subcatSaved.getCategory().getId());//verify foreign-key
@@ -167,7 +169,7 @@ public class CreateEntityIntegrationTest {
 		subcat.setCategory(cat);
 		
 		//Save SubCategory
-		SubCategory subcatSaved = subCategoryService.createSubCategory(subcat);
+		SubCategory subcatSaved = subCategoryService.saveSubCategory(subcat);
 		assertNotNull(subcatSaved);
 		assertTrue(subcatSaved.getId() > 0);
 		assertTrue(cat.getId() == subcatSaved.getCategory().getId());//verify foreign-key
@@ -190,12 +192,12 @@ public class CreateEntityIntegrationTest {
 		cat.addProduct(prod);//Many-to-One Category to Product 
 		
 		//Save Category
-		Category catSaved = categoryService.createCategory(cat);
+		Category catSaved = categoryService.saveCategory(cat);
 		assertNotNull(catSaved);
 		assertTrue(catSaved.getId() > 0);
 		
 		//Save Product
-		Product prodSaved = productService.createProduct(prod);
+		Product prodSaved = productService.saveProduct(prod);
 		assertNotNull(prodSaved);
 		assertTrue(catSaved.getId() == prodSaved.getCategory().getId());//verify foreign-key
 	}
@@ -221,18 +223,18 @@ public class CreateEntityIntegrationTest {
 		subcat.addProduct(prod);//Many-to-One SubCategory to Product
 		
 		//Save Category
-		Category catSaved = categoryService.createCategory(cat);
+		Category catSaved = categoryService.saveCategory(cat);
 		assertNotNull(catSaved);
 		assertTrue(catSaved.getId() > 0);
 		
 		//Save SubCategory
-		SubCategory subcatSaved = subCategoryService.createSubCategory(subcat);
+		SubCategory subcatSaved = subCategoryService.saveSubCategory(subcat);
 		assertNotNull(subcatSaved);
 		assertTrue(subcatSaved.getId() > 0);
 		assertTrue(catSaved.getId() == subcatSaved.getCategory().getId());//verify foreign-key
 		
 		//Save Product
-		Product prodSaved = productService.createProduct(prod);
+		Product prodSaved = productService.saveProduct(prod);
 		assertNotNull(prodSaved);
 		assertTrue(catSaved.getId() == prodSaved.getCategory().getId());//verify foreign-key
 		assertTrue(subcatSaved.getId() == prodSaved.getSubCategory().getId());//verify foreign-key
@@ -255,7 +257,7 @@ public class CreateEntityIntegrationTest {
 		prod.setCategory(cat);
 
 		//Save Product
-		Product prodSaved = productService.createProduct(prod);
+		Product prodSaved = productService.saveProduct(prod);
 		assertNotNull(prodSaved);
 		assertTrue(cat.getId() == prodSaved.getCategory().getId());//verify foreign-key
 	}
@@ -284,13 +286,13 @@ public class CreateEntityIntegrationTest {
 		subcat.addProduct(prod);//Many-to-One SubCategory to Product
 
 		//Save SubCategory
-		SubCategory subcatSaved = subCategoryService.createSubCategory(subcat);
+		SubCategory subcatSaved = subCategoryService.saveSubCategory(subcat);
 		assertNotNull(subcatSaved);
 		assertTrue(subcatSaved.getId() > 0);
 		assertTrue(cat.getId() == subcatSaved.getCategory().getId());//verify foreign-key
 
 		//Save Product
-		Product prodSaved = productService.createProduct(prod);
+		Product prodSaved = productService.saveProduct(prod);
 		assertNotNull(prodSaved);
 		assertTrue(cat.getId() == prodSaved.getCategory().getId());//verify foreign-key
 		assertTrue(subcatSaved.getId() == prodSaved.getSubCategory().getId());//verify foreign-key
@@ -322,7 +324,7 @@ public class CreateEntityIntegrationTest {
 		assertNotNull(cat);
 		assertTrue(cat.getId() > 0);
 
-		SubCategory subcat = subCategoryService.getSubCategoryByNameAndCategoryName("Mathematics", "Books");//Existing SubCategory
+		SubCategory subcat = subCategoryService.getSubCategoryByCategoryNameAndSubCategoryName("Books", "Mathematics");//Existing SubCategory
 		assertNotNull(subcat);
 		assertTrue(subcat.getId() > 0);
 
@@ -343,7 +345,7 @@ public class CreateEntityIntegrationTest {
 		prod.setSubCategory(subcat);
 		
 		//Save Product
-		Product prodSaved = productService.createProduct(prod);
+		Product prodSaved = productService.saveProduct(prod);
 		assertNotNull(prodSaved);
 		assertTrue(cat.getId() == prodSaved.getCategory().getId());//verify foreign-key
 		assertTrue(subcat.getId() == prodSaved.getSubCategory().getId());//verify foreign-key

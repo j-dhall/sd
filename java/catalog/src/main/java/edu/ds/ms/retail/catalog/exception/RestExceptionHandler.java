@@ -1,4 +1,4 @@
-package edu.ds.ms.retail.catalog.controller;
+package edu.ds.ms.retail.catalog.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

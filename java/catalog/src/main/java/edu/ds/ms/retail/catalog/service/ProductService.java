@@ -21,7 +21,7 @@ public class ProductService {
 	@Autowired
 	ProductRepository productRepository;
 	
-	public Product createProduct(Product product) {
+	public Product saveProduct(Product product) {
 		return productRepository.save(product);
 	}
 	
@@ -33,13 +33,31 @@ public class ProductService {
 		return productRepository.findByName(name).orElse(null); //TODO: Throw exception
 	}
 	
+	public List<Product> getProductsByName(String name) {
+		List<String> names = new ArrayList<String>();
+		names.add(name);
+		return productRepository.findByNameIn(names);
+		//return productRepository.findByName(name).orElse(null); //TODO: Throw exception
+	}
+	
 	public Product getProductByCategoryName(String catName) {
 		return productRepository.findByCategoryName(catName).iterator().next(); //TODO: Throw exception
 	}
 	
+	public List<Product> getProductsByCategoryName(String catName) {
+		List<String> catNames = new ArrayList<String>();
+		catNames.add(catName);
+		return productRepository.findByCategoryNameIn(catNames);
+	}
+	
 	public List<Product> getProductsByCategoryNameAndSubCategoryName(String catName, String subcatName) {
-		Collection<Product> products = productRepository.findByCategoryNameAndSubCategoryName(catName, subcatName);
-		return new ArrayList<Product>(products);
+		List<String> catNames = new ArrayList<String>();
+		catNames.add(catName);
+		List<String> subcatNames = new ArrayList<String>();
+		subcatNames.add(subcatName);
+		//Collection<Product> products = productRepository.findByCategoryNameAndSubCategoryName(catName, subcatName);
+		return productRepository.findByCategoryNameInAndSubCategoryNameIn(catNames, subcatNames);
+		//return new ArrayList<Product>(products);
 	}
 	
 	public List<Product> getProductsByDescription(String keyword) {

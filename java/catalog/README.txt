@@ -10,7 +10,7 @@ CREATE
 
 UPDATE
 1. Update Product
-2. Update Product Category [+SubCategory] Null->Old; Null:Null->Old:Old;
+2. Update Product [+Category] SubCategory Old:Old->Old:New; Old:Old->Old:Null; Old:Old->New:New; Old:Null->New:Null; 
 3. Update Category
 4. Update SubCategory
 

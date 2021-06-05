@@ -22,7 +22,7 @@ public class CategoryService {
 	//throws IllegalArgumentException - in case the given entity is null.
 	//returns the saved entity with id created by the database; will never be null.
 	//so, no need to use Optional.of()
-	public Category createCategory(Category category) {
+	public Category saveCategory(Category category) {
 		return categoryRepository.save(category);
 	}
 	

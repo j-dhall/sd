@@ -13,6 +13,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -23,6 +26,29 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
+
+@NamedEntityGraph(
+			name = "subcategory-graph-with-category-subcategories",
+			attributeNodes = {
+					@NamedAttributeNode(value = "category", subgraph = "category-subgraph"),
+					@NamedAttributeNode("name")
+			},
+			subgraphs = {
+					@NamedSubgraph(
+								name = "category-subgraph",
+								attributeNodes = {
+										@NamedAttributeNode(value = "subCategories", subgraph = "subcategory-subgraph"),
+										@NamedAttributeNode("name")
+								}
+							),
+					@NamedSubgraph(
+								name = "subcategory-subgraph",
+								attributeNodes = {
+										@NamedAttributeNode("name")
+								}
+							)
+			}
+		)
 
 @Entity
 @Table(name = "sub_category")

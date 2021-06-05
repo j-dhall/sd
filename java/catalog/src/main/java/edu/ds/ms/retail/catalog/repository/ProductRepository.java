@@ -13,8 +13,11 @@ import edu.ds.ms.retail.catalog.entity.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 	public Optional<Product> findByName(String name);
+	public List<Product> findByNameIn(List<String> names);
 	public Collection<Product> findByCategoryName(String catName);
+	public List<Product> findByCategoryNameIn(List<String> catNames);
 	public Collection<Product> findByCategoryNameAndSubCategoryName(String catName, String subcatName);
+	public List<Product> findByCategoryNameInAndSubCategoryNameIn(List<String> catNames, List<String> subcatNames);
 	public Collection<Product> findByDescriptionIgnoreCaseContaining(String keyword);
 	public List<Product> findAll(Specification<Product> spec); //use ProductSpecifications.containsTextInAttributes()
 }

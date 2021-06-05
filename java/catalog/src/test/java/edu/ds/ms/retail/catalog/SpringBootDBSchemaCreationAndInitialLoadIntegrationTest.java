@@ -127,11 +127,11 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 		
 		//learning about persistence context
 		//checkPersistenceContext(prod, cat, subCat);
-		categoryService.createCategory(cat);
+		categoryService.saveCategory(cat);
 		//checkPersistenceContext(prod, cat, subCat);
-		subCategoryService.createSubCategory(subCat);
+		subCategoryService.saveSubCategory(subCat);
 		//checkPersistenceContext(prod, cat, subCat);
-		productService.createProduct(prod);
+		productService.saveProduct(prod);
 		//checkPersistenceContext(prod, cat, subCat);
 
 		//Note: getAll...() that calls findAll() will throw com.sun.jdi.InvocationException (you can see it in the List<> returned)
@@ -173,11 +173,11 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 		subcatVideo.addProduct(prodTV);
 		
 		//persist categories and products
-		categoryService.createCategory(catElectronics);
-		subCategoryService.createSubCategory(subcatAudio);
-		subCategoryService.createSubCategory(subcatVideo);
-		productService.createProduct(prodSpeaker);
-		productService.createProduct(prodTV);
+		categoryService.saveCategory(catElectronics);
+		subCategoryService.saveSubCategory(subcatAudio);
+		subCategoryService.saveSubCategory(subcatVideo);
+		productService.saveProduct(prodSpeaker);
+		productService.saveProduct(prodTV);
 		
 		//assert relationships
 		Product fetchProd0 = productService.getProductByName("Speaker"); //.getAllProducts().get(1); //assuming Speaker
@@ -192,7 +192,7 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 	@Commit
 	void testCreateProductOfExistingCategoryAndSubCategory() {
 		Category catElectronics = categoryService.getCategoryByName("Electronics"); //Existing Category: Electronics
-		SubCategory subcatAudio = subCategoryService.getSubCategoryByNameAndCategoryName("Audio", "Electronics"); //Existing SubCategory: Audio
+		SubCategory subcatAudio = subCategoryService.getSubCategoryByCategoryNameAndSubCategoryName("Electronics", "Audio"); //Existing SubCategory: Audio
 		Product prodSpeaker = new Product(); //New Product: Bose Speaker
 		prodSpeaker.setName("Bose Speaker");
 		
@@ -201,7 +201,7 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 		subcatAudio.addProduct(prodSpeaker);
 		
 		//persist product
-		productService.createProduct(prodSpeaker);
+		productService.saveProduct(prodSpeaker);
 	}
 	
 	@Test
@@ -220,8 +220,8 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 		
 		//persist product
 		//categoryService.createCategory(catElectronics); //this creates duplicate products and subcategories
-		subCategoryService.createSubCategory(subcatHomeAppliance);
-		productService.createProduct(prodSpeaker);
+		subCategoryService.saveSubCategory(subcatHomeAppliance);
+		productService.saveProduct(prodSpeaker);
 	}
 	
 	@Test
@@ -232,7 +232,7 @@ class SpringBootDBSchemaCreationAndInitialLoadIntegrationTest {
 	
 	@Test
 	void testGetSubCategoryByNameAndCategoryName() {
-		SubCategory subCategory = subCategoryService.getSubCategoryByNameAndCategoryName("Curtains", "Home Furnishing");
+		SubCategory subCategory = subCategoryService.getSubCategoryByCategoryNameAndSubCategoryName("Home Furnishing", "Curtains");
 		String categoryName = subCategory.getCategory().getName();
 		int a = 0;
 	}
