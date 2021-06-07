@@ -44,12 +44,12 @@ public class Category {
 	String description;
 	
 	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL) //objSubCategory.category
-	//@JsonManagedReference
+	@JsonManagedReference
 	//@JsonIgnore
 	Set<SubCategory> subCategories = new HashSet<SubCategory>();
 
 	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL) //objProduct.category
-	//@JsonManagedReference
+	@JsonManagedReference
 	//@JsonIgnore
 	Set<Product> products = new HashSet<Product>();
 	

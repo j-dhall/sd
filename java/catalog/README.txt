@@ -7,6 +7,27 @@ CREATE
 	Not allowed: New:Old
 *2. Add Category
 *3. Add SubCategory of Category New:New; Old:New
+Exceptions:
+#a. Category without name
+	org.springframework.dao.DataIntegrityViolationException
+	org.hibernate.PropertyValueException
+#b. Category with duplicate name
+	org.springframework.dao.DataIntegrityViolationException
+	org.hibernate.exception.ConstraintViolationException
+	java.sql.SQLIntegrityConstraintViolationException
+#c. SubCategory without name
+	org.springframework.dao.DataIntegrityViolationException
+	org.hibernate.PropertyValueException
+#d. SubCategory without Category name
+	org.springframework.dao.DataIntegrityViolationException
+	org.hibernate.PropertyValueException
+#e. SubCategory with duplicate name
+	org.springframework.dao.DataIntegrityViolationException
+	org.hibernate.exception.ConstraintViolationException
+	java.sql.SQLIntegrityConstraintViolationException	
+#f. Product without name
+	org.springframework.dao.DataIntegrityViolationException
+	org.hibernate.PropertyValueException
 
 UPDATE
 1. Update Product

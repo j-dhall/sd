@@ -10,6 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -17,6 +20,28 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
+
+@NamedEntityGraph(
+			name = "product-graph-subcategory-and-category-subcategories",
+			attributeNodes = {
+					@NamedAttributeNode(value = "category", subgraph = "category-subgraph"),
+					@NamedAttributeNode(value = "subCategory", subgraph = "subcategory-subgraph")
+			},
+			subgraphs = {
+					@NamedSubgraph(
+								name = "category-subgraph",
+								attributeNodes = {
+										@NamedAttributeNode(value = "subCategories", subgraph = "subcategory-subgraph"),
+								}
+							),
+					@NamedSubgraph(
+								name = "subcategory-subgraph",
+								attributeNodes = {
+										@NamedAttributeNode("name")
+								}
+							)
+			}
+		)
 
 @Entity
 @Table(name = "product")
@@ -50,12 +75,12 @@ public class Product {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
 	@JsonProperty("category_id")
-	//@JsonBackReference
+	@JsonBackReference
 	Category category;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sub_category_id")
 	@JsonProperty("sub_category_id")
-	//@JsonBackReference
+	@JsonBackReference
 	SubCategory subCategory;
 }

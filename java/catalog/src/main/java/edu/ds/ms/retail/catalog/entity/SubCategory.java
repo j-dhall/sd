@@ -18,6 +18,7 @@ import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -51,7 +52,8 @@ import lombok.Data;
 		)
 
 @Entity
-@Table(name = "sub_category")
+@Table(name = "sub_category", 
+		uniqueConstraints = @UniqueConstraint(columnNames = {"category_id", "name"}))
 @Data
 public class SubCategory {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,10 +64,10 @@ public class SubCategory {
 	@JoinColumn(name = "category_id", nullable = false)
 	@NotNull
 	@JsonProperty("category_id")
-	//@JsonBackReference
+	@JsonBackReference
 	//@JsonIgnore
 	Category category;
-	
+
 	@Column(name = "name", nullable = false)
 	@NotNull
 	@JsonProperty("name")
@@ -76,7 +78,7 @@ public class SubCategory {
 	String description;
 	
 	@OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL) //objProduct.subCategory
-	//@JsonManagedReference
+	@JsonManagedReference
 	//@JsonIgnore
 	Set<Product> products = new HashSet<Product>();
 	

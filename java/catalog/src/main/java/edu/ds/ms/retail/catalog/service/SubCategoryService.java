@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.ds.ms.retail.catalog.entity.SubCategory;
+import edu.ds.ms.retail.catalog.exception.DuplicateSubCategoryException;
 import edu.ds.ms.retail.catalog.repository.SubCategoryRepository;
 
 @Service
@@ -63,6 +65,7 @@ public class SubCategoryService {
 	}
 	*/
 	
+	/*
 	//EntityGraph for named query "subcategory-graph-with-category-subcategories"
 	private SubCategory getEntityGraph(SubCategory subCategory) {
 		EntityGraph entityGraph = entityManager.getEntityGraph("subcategory-graph-with-category-subcategories");
@@ -75,12 +78,22 @@ public class SubCategoryService {
 		SubCategory result = typedQuery.getSingleResult();
 		return result;
 	}
+	*/
 	
 	public SubCategory saveSubCategory(SubCategory subCategory) {
 		
+		//We now have a unique constraint on a combination of 2 columns: (name, category)
+		//by using uniqueConstraints = @UniqueConstraint(columnNames = {"category_id", "name"})
+		//in the @Table annotation of the SubCategory entity.
+		//So, we do not need custom logic to enforce that constraint.
+		/*
+		
+		//unique constraint on subcategory name within category is not supported by the database schema.
+		//so, we write custom logic here to enforce that constraint.
+		
 		//if this is an existing subcategory
 		//we need to check that its name is unique within its category
-		if(subCategory.getId() > 0) {//if this is an existing subcategory
+		if(subCategory.getId() != null) {//if this is an existing subcategory
 			//get entity graph of subcategory to get its category and all subcategories of that category
 			SubCategory subCategoryGraph = getEntityGraph(subCategory);
 			if(subCategory.getName() != subCategoryGraph.getName()) {//has the name of the subcategory changed? 
@@ -89,12 +102,30 @@ public class SubCategoryService {
 					//because, if the name was not changed, subCategory name will match with subcat, and that is OK
 					if(subcat.getId() != subCategory.getId()) {
 						if(subcat.getName().equalsIgnoreCase(subCategory.getName())) {//do we have a duplicate name?
-							int a = 0;//TODO: throw an exception
+							throw new DuplicateSubCategoryException(subCategoryGraph.getCategory().getName(), subCategory.getName());//TODO: throw an exception
 						}//if(subcat.getName()
 					}//if(subcat.getId()
 				}//for(SubCategory subcat:
 			}//if(subCategory.getName()
 		}//if(subCategory.getId()
+		
+		*/
+		
+		//Exception caused by missing subcategory name
+		//org.springframework.dao.DataIntegrityViolationException: 
+		//not-null property references a null or transient value : 
+		//edu.ds.ms.retail.catalog.entity.SubCategory.name; 
+		//nested exception is org.hibernate.PropertyValueException: 
+		//not-null property references a null or transient value : 
+		//edu.ds.ms.retail.catalog.entity.SubCategory.name		
+
+		//Exception caused by missing category name
+		//org.springframework.dao.DataIntegrityViolationException: 
+		//not-null property references a null or transient value : 
+		//edu.ds.ms.retail.catalog.entity.SubCategory.category; 
+		//nested exception is org.hibernate.PropertyValueException: 
+		//not-null property references a null or transient value : 
+		//edu.ds.ms.retail.catalog.entity.SubCategory.category
 		
 		return subCategoryRepository.save(subCategory);
 	}
@@ -110,7 +141,7 @@ public class SubCategoryService {
 		return subCategoryRepository.findByName(name).orElse(null); //TODO: Throw exception
 	}*/
 	
-	public List<SubCategory> getSubCategoryByCategoryName(String categoryName) {
+	public List<SubCategory> getSubCategoriesByCategoryName(String categoryName) {
 		return subCategoryRepository.findByCategoryName(categoryName);
 	}
 	

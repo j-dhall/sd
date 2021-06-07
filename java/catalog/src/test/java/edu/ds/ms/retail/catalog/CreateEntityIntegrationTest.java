@@ -9,12 +9,15 @@ import java.sql.SQLIntegrityConstraintViolationException;
 //import javax.persistence.EntityManager;
 
 import org.hibernate.PropertyValueException;
+import org.hibernate.exception.ConstraintViolationException;
 //import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -82,6 +85,7 @@ public class CreateEntityIntegrationTest {
 	//nested exception is org.hibernate.PropertyValueException: not-null property references a 
 	// null or transient value : edu.ds.ms.retail.catalog.entity.Category.name
 	@Test
+	//Throws: org.hibernate.PropertyValueException
 	//@Transactional //TODO
 	void testCreateCategoryWithoutName() {
 		Category cat = new Category();
@@ -90,7 +94,10 @@ public class CreateEntityIntegrationTest {
 		try {
 			categoryService.saveCategory(cat);//passing Category without mandatory name
 		} catch (Exception e) {
+			assertTrue(e instanceof DataIntegrityViolationException);
 			assertTrue(e.getCause() instanceof PropertyValueException);
+			assertTrue(((PropertyValueException)e.getCause()).getEntityName().contains(Category.class.getName()));
+			assertEquals(((PropertyValueException)e.getCause()).getPropertyName(), "name");
 		}
 	}
 
@@ -104,6 +111,7 @@ public class CreateEntityIntegrationTest {
 		try {
 			categoryService.saveCategory(null);//passing invalid Category
 		} catch (Exception e) {
+			assertTrue(e instanceof InvalidDataAccessApiUsageException);
 			assertTrue(e.getCause() instanceof IllegalArgumentException);
 		}
 	}
@@ -111,15 +119,22 @@ public class CreateEntityIntegrationTest {
 	//Test: Try creating duplicate Category (category name should be unique)
 	//Throws: java.sql.SQLIntegrityConstraintViolationException
 	@Test
+	//Throws: java.sql.SQLIntegrityConstraintViolationException
 	//@Sql({"/test_data.sql"}) //data creation for test case
 	//@Transactional
 	void testCreateCategoryWithDuplicateName() {
 		Category cat = new Category();//New Category
-		cat.setName("Electronics");
+		String catName = "Electronics"; 
+		cat.setName(catName);
 		try {
 			categoryService.saveCategory(cat);//passing Category with name of an existing category
 		} catch (Exception e) {
+			assertTrue(e instanceof DataIntegrityViolationException);
+			assertTrue(e.getCause() instanceof ConstraintViolationException);
 			assertTrue(e.getCause().getCause() instanceof SQLIntegrityConstraintViolationException);
+			//String a = e.getCause().getCause().getMessage();
+			//String b = String.format("Duplicate entry '%s'", catName);
+			assertTrue(e.getCause().getCause().getMessage().startsWith(String.format("Duplicate entry '%s'", catName)));
 		}
 	}
 	
@@ -175,7 +190,113 @@ public class CreateEntityIntegrationTest {
 		assertTrue(cat.getId() == subcatSaved.getCategory().getId());//verify foreign-key
 	}
 	
+	//Test: Create SubCategory without name
+	//Throws: org.hibernate.PropertyValueException
+	@Test
+	void testCreateSubCategoryOfExistingCategoryWithoutSubCategoryName() {
+		Category cat = categoryService.getCategoryByName("Books");//Existing Category
+		assertNotNull(cat);
+		assertTrue(cat.getId() > 0);
+		
+		SubCategory subcat = new SubCategory();//New SubCategory
+		//subcat.setName("History");//subcategory without name
+		subcat.setDescription("Books on world wars, and other important historical conflicts");
+
+		//cat.addSubCategory(subcat);//Many-to-One Category to SubCategory
+		subcat.setCategory(cat);
+		
+		//Save SubCategory
+		try {
+			SubCategory subcatSaved = subCategoryService.saveSubCategory(subcat);
+		} catch (Exception e) {
+			assertTrue(e instanceof DataIntegrityViolationException);
+			assertTrue(e.getCause() instanceof PropertyValueException);
+			assertTrue(((PropertyValueException)e.getCause()).getEntityName().contains(SubCategory.class.getName()));
+			assertEquals(((PropertyValueException)e.getCause()).getPropertyName(), "name");
+		}
+	}
+	
+	//Test: Create SubCategory without Category
+	//Throws: org.hibernate.PropertyValueException
+	@Test
+	void testCreateSubCategoryWithoutCategory() {
+		SubCategory subcat = new SubCategory();//New SubCategory
+		subcat.setName("Geography");
+		subcat.setDescription("Books on continents, countries, flora and fauna, climate, wildlife, oceans, natural disasters, etc");
+		
+		//Save SubCategory
+		try {
+			SubCategory subcatSaved = subCategoryService.saveSubCategory(subcat);
+		} catch (Exception e) {
+			assertTrue(e instanceof DataIntegrityViolationException);
+			assertTrue(e.getCause() instanceof PropertyValueException);
+			assertTrue(((PropertyValueException)e.getCause()).getEntityName().contains(SubCategory.class.getName()));
+			assertEquals(((PropertyValueException)e.getCause()).getPropertyName(), "category");
+		}
+	}
+	
+	//Test: Create SubCategory with duplicate name within the same Category
+	//Throws: java.sql.SQLIntegrityConstraintViolationException
+	@Test
+	void testCreateSubCategoryWithDuplicateNameWithinSameCategory() {
+		Category cat = categoryService.getCategoryByName("Books");//Existing Category
+		assertNotNull(cat);
+		assertTrue(cat.getId() > 0);
+		
+		SubCategory subcat = new SubCategory();//New SubCategory
+		String subcatName = "Literature";
+		subcat.setName(subcatName);//existing subcategory
+		subcat.setDescription("Duplicate subcategory. Books on literature.");
+
+		//cat.addSubCategory(subcat);//Many-to-One Category to SubCategory
+		subcat.setCategory(cat);
+		
+		//Save SubCategory
+		try {
+			SubCategory subcatSaved = subCategoryService.saveSubCategory(subcat);
+		} catch (Exception e) {
+			assertTrue(e instanceof DataIntegrityViolationException);
+			assertTrue(e.getCause() instanceof ConstraintViolationException);
+			assertTrue(e.getCause().getCause() instanceof SQLIntegrityConstraintViolationException);
+			assertTrue(e.getCause().getCause().getMessage().startsWith("Duplicate entry"));
+			assertTrue(e.getCause().getCause().getMessage().contains(subcatName));
+		}
+	}
+	
 	//CREATE PRODUCT
+	
+	//Test: Create Product
+	@Test
+	void testCreateProduct() {
+		Product prod = new Product();//New Product
+		String prodName = "Washing Machine"; 
+		prod.setName(prodName);
+
+		//Save Product
+		Product prodSaved = productService.saveProduct(prod);
+		assertNotNull(prodSaved);
+		assertTrue(prodSaved.getId() > 0);
+		assertEquals(prodSaved.getName(), prodName);
+	}
+	
+	//Test: Create Product without name
+	//Throws: org.hibernate.PropertyValueException
+	@Test
+	void testCreateProductWithoutName() {
+		Product prod = new Product();//New Product
+		//String prodName = "Washing Machine";
+		//prod.setName(prodName);
+
+		//Save Product
+		try {
+			Product prodSaved = productService.saveProduct(prod);
+		} catch (Exception e) {
+			assertTrue(e instanceof DataIntegrityViolationException);
+			assertTrue(e.getCause() instanceof PropertyValueException);
+			assertTrue(((PropertyValueException)e.getCause()).getEntityName().contains(Product.class.getName()));
+			assertEquals(((PropertyValueException)e.getCause()).getPropertyName(), "name");
+		}
+	}
 	
 	//Test: Create Product with new Category
 	@Test
@@ -200,6 +321,25 @@ public class CreateEntityIntegrationTest {
 		Product prodSaved = productService.saveProduct(prod);
 		assertNotNull(prodSaved);
 		assertTrue(catSaved.getId() == prodSaved.getCategory().getId());//verify foreign-key
+	}
+	
+	//Test: Create Product with new SubCategory
+	@Test
+	void testCreateProductWithoutCategoryWithNewSubCategory() {
+		SubCategory subcat = subCategoryService.getSubCategoryByCategoryNameAndSubCategoryName("Electronics", "Speakers"); //Existing SubCategory
+
+		Product prod = new Product();//New Product
+		prod.setName("Denon Speakers");
+		
+		//subcat.addProduct(prod);//Many-to-One Category to Product
+		prod.setSubCategory(subcat);
+				
+		//Save Product
+		try {
+			Product prodSaved = productService.saveProduct(prod);
+		} catch (Exception e) {
+			assertTrue(e instanceof DataIntegrityViolationException);
+		}
 	}
 	
 	//Test: Create Product with new Category and SubCategory
@@ -352,4 +492,5 @@ public class CreateEntityIntegrationTest {
 		
 		//sessionFactory.getCurrentSession().getTransaction().commit();
 	}
+
 }
