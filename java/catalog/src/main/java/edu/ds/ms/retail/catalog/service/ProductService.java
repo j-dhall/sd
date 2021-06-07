@@ -47,7 +47,7 @@ public class ProductService {
 	}
 	
 	public Product saveProduct(Product product) {
-		
+		/*
 		//BROKEN CODE
 		//Reason: Bad design: Separate tables for Category and SubCategory, instead of a single table with parentCategoryId column.
 		//Broken: A product's category can be changed to a category which is not the same category of the products subcategory.
@@ -157,6 +157,7 @@ public class ProductService {
 				//}
 			//}
 		}
+		*/
 
 		return productRepository.save(product);
 	}
