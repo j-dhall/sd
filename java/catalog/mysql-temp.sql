@@ -17,6 +17,8 @@ select * from product;
 #COMMIT
 commit;
 
+insert into sub_category (name, description, category_id) values ("Literature", "AGAIN: Books on languages and art", 1);
+
 #INSERT
 #Categories
 insert into category (name, description) values ("Books", "Collection of paperback books, Kindle e-books, periodicals, etc");
