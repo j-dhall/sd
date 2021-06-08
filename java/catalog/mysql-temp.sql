@@ -4,6 +4,9 @@ use catalog2;
 drop database catalog;
 drop database catalog2;
 
+#COMMIT
+commit;
+
 #DESCRIBE
 describe category;
 describe sub_category;
@@ -14,8 +17,6 @@ select * from category;
 select * from sub_category;
 select * from product;
 
-#COMMIT
-commit;
 
 insert into sub_category (name, description, category_id) values ("Literature", "AGAIN: Books on languages and art", 1);
 
