@@ -30,7 +30,7 @@ Progress and Observations:
 
     Using **logging.level.edu.ds.ms.retail.catalog2=TRACE** does not cause any exception.
 
-7. 
+7. moved back to catalog project, since now the exceptions issue is resolved.
 8. 
 9. 
 10. 
