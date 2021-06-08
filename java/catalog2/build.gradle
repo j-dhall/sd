@@ -10,7 +10,7 @@ flyway {
 	url = 'jdbc:mysql://localhost:3306'
 	user = 'scott'
 	password = 'tiger'
-	schemas = ['catalog']
+	schemas = ['catalog2']
 }
 
 group = 'edu.ds.ms.retail'
