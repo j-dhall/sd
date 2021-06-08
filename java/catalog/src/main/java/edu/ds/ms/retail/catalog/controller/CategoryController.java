@@ -1,5 +1,6 @@
 package edu.ds.ms.retail.catalog.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,18 @@ public class CategoryController {
 	CategoryService categoryService;
 	
 	@GetMapping
-	public List<Category> getAllCategories() {
-		//logging demo using lombak slf4j (defaults to using Logback implementation)
-		log.trace("A TRACE Message.");
-		log.debug("A DEBUG Message.");
-		log.info("A INFO Message.");
-		log.warn("A WARN Message.");
-		log.error("A ERROR Message.");
+	public List<Category> /*String*/ getAllCategories() {
+		log.debug("INSIDE CategoryController.getAllCategories().");
+		List<Category> categories = categoryService.getAllCategories();
 		
-		List<Category> categories = categoryService.getAllCategories(); 
+		//HTTP 500: Internal Server Error
+		//if we do not set the lazy-fetched persistence store members to null.
+		//I think this is related to json marshalling.
+		for(Category cat: categories) {
+			cat.setSubCategories(null);
+			cat.setProducts(null);
+		}
+
 		return categories;
 	}
 }
