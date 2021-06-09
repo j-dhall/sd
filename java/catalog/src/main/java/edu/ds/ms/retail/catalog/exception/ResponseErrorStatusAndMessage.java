@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class ResponseStatusError {
+public class ResponseErrorStatusAndMessage {
 	@JsonProperty("status_code")
 	private int code;
 	@JsonProperty("status_message")

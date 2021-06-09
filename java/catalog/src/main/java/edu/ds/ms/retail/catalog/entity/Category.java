@@ -44,12 +44,14 @@ public class Category {
 	String description;
 	
 	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL) //objSubCategory.category
-	@JsonManagedReference
+	//value attribute mentioned to avoid the following error during REST POST unmarshalling: Jackson: Multiple back-reference properties with name 'defaultReference'
+	//check the corresponding @JsonBackReference having the same value attribute.
+	@JsonManagedReference(value = "category-to-subcategories")
 	//@JsonIgnore
 	Set<SubCategory> subCategories = new HashSet<SubCategory>();
 
 	@OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL) //objProduct.category
-	@JsonManagedReference
+	@JsonManagedReference(value = "category-to-products")
 	//@JsonIgnore
 	Set<Product> products = new HashSet<Product>();
 	

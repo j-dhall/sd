@@ -64,7 +64,7 @@ public class SubCategory {
 	@JoinColumn(name = "category_id", nullable = false)
 	@NotNull
 	@JsonProperty("category_id")
-	@JsonBackReference
+	@JsonBackReference(value = "category-to-subcategories")
 	//@JsonIgnore
 	Category category;
 
@@ -78,7 +78,7 @@ public class SubCategory {
 	String description;
 	
 	@OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL) //objProduct.subCategory
-	@JsonManagedReference
+	@JsonManagedReference(value = "subcategory-to-products")
 	//@JsonIgnore
 	Set<Product> products = new HashSet<Product>();
 	
