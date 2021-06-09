@@ -50,8 +50,9 @@ public class CategoryController {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getCause().getCause().getMessage());
 		}
 		//HTTP 500: Internal Server Error
-		catReturn.setSubCategories(null);
-		catReturn.setProducts(null);
+		//These fields are already null in the returned object
+		//catReturn.setSubCategories(null);
+		//catReturn.setProducts(null);
 		
 		return catReturn;//created category with id assigned by database
 	}

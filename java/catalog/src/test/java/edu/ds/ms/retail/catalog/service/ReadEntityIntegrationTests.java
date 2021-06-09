@@ -1,6 +1,8 @@
-package edu.ds.ms.retail.catalog;
+package edu.ds.ms.retail.catalog.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -32,6 +34,23 @@ public class ReadEntityIntegrationTests {
 	@Autowired
 	ProductService productService;
 
+	@Test
+	void testGetExistingCategory() {
+		Category cat = categoryService.getCategoryByName("Electronics");
+		
+		//Assert
+		assertNotNull(cat);
+		assertTrue(cat.getId() != null);
+	}
+	
+	@Test
+	void testGetNonExistingCategory() {
+		Category cat = categoryService.getCategoryByName("Dummy");
+		//No exception is thrown because database returns 0 rows. 
+		//Database does not treat this as an error.
+		assertNull(cat); //null is returned for a non-existent category
+	}
+	
 	@Test
 	void testGetAllCategories() {
 		List<Category> categories = categoryService.getAllCategories();

@@ -1,4 +1,4 @@
-package edu.ds.ms.retail.catalog;
+package edu.ds.ms.retail.catalog.service;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
