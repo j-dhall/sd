@@ -4,6 +4,62 @@ plugins {
 	id 'java'
 	id 'war'
 	id 'org.flywaydb.flyway' version '7.9.1'
+	//id 'org.asciidoctor.convert' version '1.5.3'
+	//https://discuss.asciidoctor.org/Gradle-asciidoctor-plugin-v2-not-working-td6865.html
+    id 'org.asciidoctor.jvm.base' version '2.1.0' // (1)
+    id 'org.asciidoctor.jvm.convert' version '2.1.0' // (2)
+}
+
+//https://discuss.asciidoctor.org/Gradle-asciidoctor-plugin-v2-not-working-td6865.html
+asciidoctor {
+  println ("asciidoctor task")
+  sourceDir  file('src/doc/asciidoc')
+  sources {
+    include 'index.adoc'
+  }
+  outputDir  file('build/docs')
+  attributes \
+		'snippets': file('build/snippets')
+}
+
+//https://www.vogella.com/tutorials/AsciiDoc/article.html
+//apply plugin: 'java'
+//apply plugin: 'org.asciidoctor.convert'
+
+//asciidoctorj {
+//	version = '1.5.4'
+//}
+/*
+asciidoctor {
+	attributes \
+		'sourcedir': file('src/doc/asciidoc')
+		'sources' : {
+			'include': 'index.adoc'
+		}
+		'build-gradle': file('build.gradle')
+		'snippets': file('build/snippets')
+}
+*/
+
+//https://discuss.asciidoctor.org/Gradle-asciidoctor-plugin-v2-not-working-td6865.html
+/*
+asciidoctor {
+  println ("asciidoctor task")
+  sourceDir  file('src/doc/asciidoc')
+  sources {
+    include 'index.adoc'
+  }
+  outputDir  file('build/docs')
+  attributes \
+		'snippets': file('build/snippets')
+}
+*/
+
+//https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/292
+asciidoctor {
+  sourceDir = file('src/doc/asciidoc')
+  outputDir = file('build/docs')
+  attributes =	['snippets': file('build/snippets')]
 }
 
 flyway {
@@ -17,6 +73,45 @@ flyway {
 	//locations = ['classpath:db/migration']
 }
 
+
+
+//get snippets from this folder
+//sourceDir needed only if index.adoc not in src/doc/asciidoc which is the default location for asciidoctor in gradle.
+/*
+asciidoctor {
+	sourceDir 'src/main/asciidoc'
+	attributes \
+		'snippets': file('build/snippets')
+}
+
+Getting Build errors:
+Some problems were found with the configuration of task ':asciidoctor' (type 'AsciidoctorTask').
+  - Type 'org.asciidoctor.gradle.AsciidoctorTask' method 'asGemPath()' should not be annotated with: @Optional, @InputDirectory.
+    
+    Reason: Input/Output annotations are ignored if they are placed on something else than a getter.
+    
+    Possible solutions:
+      1. Remove the annotations.
+      2. Rename the method.
+    
+    Please refer to https://docs.gradle.org/7.0.2/userguide/validation_problems.html#ignored_annotations_on_method for more details about this problem.
+  - Type 'org.asciidoctor.gradle.AsciidoctorTask' property 'asciidoctor' is missing an input or output annotation.
+    
+    Reason: A property without annotation isn't considered during up-to-date checking.
+    
+    Possible solutions:
+      1. Add an input or output annotation.
+      2. Mark it as @Internal.
+
+*/
+/*
+asciidoctor {
+	sourceDir  file('src/doc/asciidoc')
+	attributes  \
+			'snippets': file('build/snippets')
+		
+}
+*/
 group = 'edu.ds.ms.retail'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
@@ -41,7 +136,26 @@ dependencies {
   	//implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
 	//implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	//testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	//implementation group: 'org.asciidoctor', name: 'asciidoctor-gradle-plugin', version: '1.6.0'
 }
+
+
+/* BASED ON: https://asciidoctor.cn/docs/asciidoctor-gradle-plugin/
+buildscript {
+	dependencies {
+		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+	}
+}
+
+apply plugin: 'org.asciidoctor.convert'
+
+asciidoctor {
+	sourceDir 'src/doc/asciidoc'
+	attributes \
+		'snippets': file('build/snippets')
+}
+*/
 
 test {
 	useJUnitPlatform()

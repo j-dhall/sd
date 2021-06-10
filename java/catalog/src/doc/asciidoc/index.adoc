@@ -1,0 +1,11 @@
+= Catalog Service
+
+This is an example output for a service running at http://localhost:8080/categories:
+
+.request
+include::{snippets}\get-all-categories\http-request.adoc[]
+
+.response
+include::{snippets}\get-all-categories\http-response.adoc[]
+
+End.
