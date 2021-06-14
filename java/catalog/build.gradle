@@ -62,8 +62,10 @@ asciidoctor {
   attributes =	['snippets': file('build/snippets')]
 }
 
+//Host of MySQL in docker in Ubuntu
+//172.27.130.156
 flyway {
-	url = 'jdbc:mysql://localhost:3306'
+	url = 'jdbc:mysql://172.27.130.156:3306'
 	user = 'scott'
 	password = 'tiger'
 	schemas = ['catalog']
