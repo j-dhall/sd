@@ -1,0 +1,3 @@
+FROM mysql
+EXPOSE 3306
+ARG MYSQL_ROOT_PASSWORD=welcomehere
