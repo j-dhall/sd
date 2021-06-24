@@ -6,3 +6,4 @@ vendor
 /input/*
 .ipynb_checkpoints/*
 /AccountService/
+/eShopOnContainers/
