@@ -1,0 +1,2 @@
+edu/java/gradle/HelloJavaGradle.java
+ edu.java.gradle.HelloJavaGradle
