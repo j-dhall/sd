@@ -36,7 +36,7 @@ import edu.ds.ms.retail.catalog.entity.Category;
 //@TestInstance(Lifecycle.PER_CLASS)
 //@ContextConfiguration(classes = {RestTemplateAutoConfiguration.class})
 @ActiveProfiles("test")
-//@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @Sql(scripts = {"/test_data.sql"})
 public class IntegrationTest {
 	

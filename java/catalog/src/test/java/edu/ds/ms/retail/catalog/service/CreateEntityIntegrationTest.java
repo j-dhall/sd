@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
+import javax.validation.constraints.NotNull;
+
 //import javax.persistence.EntityManager;
 
 import org.hibernate.PropertyValueException;
@@ -94,10 +96,11 @@ public class CreateEntityIntegrationTest {
 		try {
 			categoryService.saveCategory(cat);//passing Category without mandatory name
 		} catch (Exception e) {
-			assertTrue(e instanceof DataIntegrityViolationException);
-			assertTrue(e.getCause() instanceof PropertyValueException);
-			assertTrue(((PropertyValueException)e.getCause()).getEntityName().contains(Category.class.getName()));
-			assertEquals(((PropertyValueException)e.getCause()).getPropertyName(), "name");
+			assertTrue(e instanceof javax.validation.ConstraintViolationException);//Category.name has @NotNull
+			//assertTrue(e instanceof DataIntegrityViolationException);
+			//assertTrue(e.getCause() instanceof PropertyValueException);
+			//assertTrue(((PropertyValueException)e.getCause()).getEntityName().contains(Category.class.getName()));
+			//assertEquals(((PropertyValueException)e.getCause()).getPropertyName(), "name");
 		}
 	}
 
@@ -209,10 +212,11 @@ public class CreateEntityIntegrationTest {
 		try {
 			SubCategory subcatSaved = subCategoryService.saveSubCategory(subcat);
 		} catch (Exception e) {
-			assertTrue(e instanceof DataIntegrityViolationException);
-			assertTrue(e.getCause() instanceof PropertyValueException);
-			assertTrue(((PropertyValueException)e.getCause()).getEntityName().contains(SubCategory.class.getName()));
-			assertEquals(((PropertyValueException)e.getCause()).getPropertyName(), "name");
+			assertTrue(e instanceof javax.validation.ConstraintViolationException);//SubCategory.name has @NotNull
+			//assertTrue(e instanceof DataIntegrityViolationException);
+			//assertTrue(e.getCause() instanceof PropertyValueException);
+			//assertTrue(((PropertyValueException)e.getCause()).getEntityName().contains(SubCategory.class.getName()));
+			//assertEquals(((PropertyValueException)e.getCause()).getPropertyName(), "name");
 		}
 	}
 	
@@ -228,10 +232,11 @@ public class CreateEntityIntegrationTest {
 		try {
 			SubCategory subcatSaved = subCategoryService.saveSubCategory(subcat);
 		} catch (Exception e) {
-			assertTrue(e instanceof DataIntegrityViolationException);
-			assertTrue(e.getCause() instanceof PropertyValueException);
-			assertTrue(((PropertyValueException)e.getCause()).getEntityName().contains(SubCategory.class.getName()));
-			assertEquals(((PropertyValueException)e.getCause()).getPropertyName(), "category");
+			assertTrue(e instanceof javax.validation.ConstraintViolationException);//SubCategory.category has @NotNull
+			//assertTrue(e instanceof DataIntegrityViolationException);
+			//assertTrue(e.getCause() instanceof PropertyValueException);
+			//assertTrue(((PropertyValueException)e.getCause()).getEntityName().contains(SubCategory.class.getName()));
+			//assertEquals(((PropertyValueException)e.getCause()).getPropertyName(), "category");
 		}
 	}
 	
@@ -291,10 +296,11 @@ public class CreateEntityIntegrationTest {
 		try {
 			Product prodSaved = productService.saveProduct(prod);
 		} catch (Exception e) {
-			assertTrue(e instanceof DataIntegrityViolationException);
-			assertTrue(e.getCause() instanceof PropertyValueException);
-			assertTrue(((PropertyValueException)e.getCause()).getEntityName().contains(Product.class.getName()));
-			assertEquals(((PropertyValueException)e.getCause()).getPropertyName(), "name");
+			assertTrue(e instanceof javax.validation.ConstraintViolationException);//Product.name has @NotNull
+			//assertTrue(e instanceof DataIntegrityViolationException);
+			//assertTrue(e.getCause() instanceof PropertyValueException);
+			//assertTrue(((PropertyValueException)e.getCause()).getEntityName().contains(Product.class.getName()));
+			//assertEquals(((PropertyValueException)e.getCause()).getPropertyName(), "name");
 		}
 	}
 	
