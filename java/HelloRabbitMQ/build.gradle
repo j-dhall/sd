@@ -1,0 +1,18 @@
+plugins {
+	id 'java'
+}
+
+jar {
+	manifest {
+		attributes (
+			'Main-Class': 'edu.sd.ms.backing.messaging.rabbitmq.HelloRabbitMQ'
+		)
+	}
+}
+
+group = 'edu.java.gradle'
+
+dependencies {
+	compile project(':HelloRabbitMQServer')
+	compile project(':HelloRabbitMQClient')
+}

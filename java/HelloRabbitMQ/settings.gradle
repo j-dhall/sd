@@ -1,0 +1,3 @@
+include ':HelloRabbitMQServer', 'HelloRabbitMQClient'
+project(':HelloRabbitMQServer').projectDir = new File(settingsDir, "../HelloRabbitMQServer")
+project(':HelloRabbitMQClient').projectDir = new File(settingsDir, "../HelloRabbitMQClient")

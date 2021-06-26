@@ -1,0 +1,2 @@
+edu/sd/ms/backing/messaging/rabbitmq/HelloRabbitMQClient.java
+ edu.sd.ms.backing.messaging.rabbitmq.HelloRabbitMQClient

@@ -1,0 +1,9 @@
+/**
+ * 
+ */
+/**
+ * @author jeete
+ *
+ */
+module HelloRabbitMQServer {
+}
