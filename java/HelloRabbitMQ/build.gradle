@@ -12,6 +12,10 @@ jar {
 
 group = 'edu.java.gradle'
 
+repositories {
+	mavenCentral()
+}
+
 dependencies {
 	compile project(':HelloRabbitMQServer')
 	compile project(':HelloRabbitMQClient')

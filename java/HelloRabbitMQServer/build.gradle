@@ -11,3 +11,11 @@ jar {
 }
 
 group = 'edu.java.gradle'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation group: 'com.rabbitmq', name: 'amqp-client', version: '5.12.0'
+}
