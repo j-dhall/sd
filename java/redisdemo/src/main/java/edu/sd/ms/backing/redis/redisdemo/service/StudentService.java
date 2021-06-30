@@ -1,5 +1,6 @@
 package edu.sd.ms.backing.redis.redisdemo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,10 @@ public class StudentService {
 	//READ
 	
 	public List<Student> getAllStudents() {
-		return studentRepository.findAll();
+		List<Student> students = new ArrayList<Student>();
+		Iterable<Student> iterStudents = studentRepository.findAll(); 
+		iterStudents.forEach(students::add);
+		return students;
 	}
 	
 	@Transactional

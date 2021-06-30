@@ -3,6 +3,10 @@ package edu.sd.ms.backing.redis.redisdemo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
+import org.springframework.data.elasticsearch.core.query.IndexQuery;
+import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,12 +26,28 @@ import lombok.extern.slf4j.Slf4j;
 public class StudentController {
 	@Autowired
 	StudentService studentService;
+	
+	private ElasticsearchOperations elasticsearchOperations;
+	
+	public StudentController(ElasticsearchOperations elasticsearchOperations) {
+		this.elasticsearchOperations = elasticsearchOperations;
+	}
 
 	//CREATE
 	
 	@PostMapping("/create")
 	public Student createStudent(@RequestBody Student student) {
 		log.debug("INSIDE StudentController.createStudent()");
+		
+		//ES
+		IndexQuery indexQuery = new IndexQueryBuilder()
+				.withId(student.getId().toString())
+				.withObject(student)
+				.build();
+
+		String documentId = elasticsearchOperations.index(indexQuery, IndexCoordinates.of("school"));
+		log.debug("ELASTIC: Document Id: " + documentId);
+		
 		return studentService.saveStudent(student);
 	}
 	

@@ -23,6 +23,17 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+
+	//https://spinscale.de/posts/2020-08-06-introduction-into-spring-data-elasticsearch.html
+	//Spring Data Elasticsearch uses the Elasticsearch REST client underneath.
+	//Spring Data Elasticsearch
+	//While trying to retain a common access model for many data stores, 
+	// Spring Data still tries to expose specific data store features. 
+	//This also applies to the Elasticsearch extension.
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-elasticsearch', version: '2.5.2'
+	//Using Elasticsearch REST High-Level Client
+	//The below dependency is included by Spring [Boot Starter] Data Elasticsearch
+	//implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: '7.13.2'
 }
 
 test {
