@@ -1,0 +1,5 @@
+includeFlat 'model'
+includeFlat 'repository', 'web'
+
+println 'ROOT PROJECT NAME: ' + rootProject.name
+

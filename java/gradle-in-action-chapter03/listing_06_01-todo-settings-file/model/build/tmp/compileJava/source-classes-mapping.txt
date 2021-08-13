@@ -1,0 +1,2 @@
+com/manning/gia/todo/model/ToDoItem.java
+ com.manning.gia.todo.model.ToDoItem

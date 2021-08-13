@@ -1,0 +1,78 @@
+ext.projectIds = ['group': 'com.manning.gia', 'version': '0.1']
+
+group = projectIds.group
+version = projectIds.version
+
+project(':model') {
+	group = projectIds.group
+	version = projectIds.version
+	apply plugin: 'java'
+}
+
+project(':repository') {
+	group = projectIds.group
+	version = projectIds.version
+	apply plugin: 'java'
+	
+	dependencies {
+		compile project(':model')
+	}
+}
+
+	
+buildscript {
+	repositories {
+		gradlePluginPortal()
+	}
+	dependencies {
+		classpath 'com.bmuschko:gradle-tomcat-plugin:2.7.0'
+	}
+}
+
+
+project(':web') {
+	group = projectIds.group
+	version = projectIds.version
+
+	apply plugin: 'java'
+	apply plugin: 'war'
+
+	apply plugin: 'com.bmuschko.tomcat'
+	//apply plugin: 'jetty'
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		compile project(':model')
+		compile project(':repository')
+	}
+
+	/*
+	dependencies {
+		providedCompile 'javax.servlet:servlet-api:2.5'
+		runtime 'javax.servlet:jstl:1.1.2'
+	}
+	*/
+	
+	dependencies {
+		providedCompile 'javax.servlet:servlet-api:2.5',
+				'javax.servlet.jsp:jsp-api:2.1'
+		providedCompile 'org.apache.tomcat.embed:tomcat-embed-core:9.0.1' //THIS WAS ADDED FOR COMPILE TIME DEPENDENCY ON org.apache.catalina.webresources.TomcatURLStreamHandlerFactory
+		runtime 'javax.servlet:jstl:1.1.2',
+				'taglibs:standard:1.1.2'
+	}
+
+	dependencies {
+		def tomcatVersion = '9.0.1'
+		tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+			   "org.apache.tomcat.embed:tomcat-embed-logging-juli:9.0.0.M6",
+			   "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+	}
+
+	tomcat {
+		httpProtocol = 'org.apache.coyote.http11.Http11Nio2Protocol'
+		ajpProtocol  = 'org.apache.coyote.ajp.AjpNio2Protocol'
+	}
+}
