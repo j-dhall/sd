@@ -1,33 +1,18 @@
-ext.projectIds = ['group': 'com.manning.gia', 'version': '0.1']
+allprojects {
+	group = 'com.manning.gia'
+	version = '0.1'
+}
 
-group = projectIds.group
-version = projectIds.version
-
-project(':model') {
-	group = projectIds.group
-	version = projectIds.version
+subprojects {
 	apply plugin: 'java'
 }
 
-project(':repository') {
-	group = projectIds.group
-	version = projectIds.version
-	apply plugin: 'java'
-	
+project(':repository') {	
 	dependencies {
 		compile project(':model')
 	}
 }
 
-/* STUCK DUE TO ERROR: "Caused by: java.lang.Error: factory already defined"
-Tried:
-1. write servlet context listener and call TomcatURLStreamHandlerFactory.disable();
-But, this code is not reached since tomcat instance starts and fails.
-2. I needed to call TomcatURLStreamHandlerFactory.disable(); before tomcat server start.
-server.xml is the place to hook a LifecycleListener derived class. But, embedded tomcat does not allow server.xml.
-So, I am abandoning embedded Tomcat and now trying Gretty (since Jetty is not supported).
-*/
-//GRETTY
 buildscript {
   repositories {
     maven {
@@ -40,24 +25,17 @@ buildscript {
 }
 
 project(':web') {
-	apply plugin: 'java'
 	apply plugin: 'war'
 	apply plugin: "org.gretty"
-	
-	group = projectIds.group
-	version = projectIds.version
 
 	repositories {
 		mavenCentral()
 	}
 
 	dependencies {
-		compile project(':model')
 		compile project(':repository')
 		providedCompile 'javax.servlet:servlet-api:2.5',
 				'javax.servlet.jsp:jsp-api:2.1'
-		//THIS WAS ADDED FOR COMPILE TIME DEPENDENCY ON org.apache.catalina.webresources.TomcatURLStreamHandlerFactory
-		providedCompile 'org.apache.tomcat.embed:tomcat-embed-core:9.0.1' 
 		runtime 'javax.servlet:jstl:1.1.2',
 				'taglibs:standard:1.1.2'
 	}
