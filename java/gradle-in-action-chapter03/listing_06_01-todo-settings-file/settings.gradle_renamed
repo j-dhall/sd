@@ -1,5 +1,0 @@
-include 'model'
-include 'repository', 'web'
-
-println 'ROOT PROJECT NAME: ' + rootProject.name
-
