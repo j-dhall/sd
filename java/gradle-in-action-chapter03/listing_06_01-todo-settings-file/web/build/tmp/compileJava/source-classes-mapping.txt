@@ -1,7 +1,3 @@
-com/mkyong/listener/KPTomcatListener.java
- com.mkyong.listener.KPTomcatListener
 com/manning/gia/todo/web/ToDoServlet.java
  com.manning.gia.todo.web.ToDoServlet
  com.manning.gia.todo.web.ToDoServlet$ToDoListStats
-com/mkyong/listener/MyAppServletContextListener.java
- com.mkyong.listener.MyAppServletContextListener

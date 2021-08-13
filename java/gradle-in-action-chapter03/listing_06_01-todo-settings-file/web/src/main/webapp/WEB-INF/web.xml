@@ -44,11 +44,4 @@
         <servlet-name>todo</servlet-name>
         <url-pattern>/clearCompleted</url-pattern>
     </servlet-mapping>
-	
-	
-	<listener>
-    <listener-class>
-             com.mkyong.listener.MyAppServletContextListener 
-        </listener-class>
-   </listener>
 </web-app>
