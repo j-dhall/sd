@@ -37,4 +37,20 @@ task integrationTest(type: Test) {
     reports.junitXml.destination = file("$reports.junitXml.destination/integration")
 }
 
-check.dependsOn integrationTest
+//commented to remove H2 non inmemory db
+//check.dependsOn integrationTest
+
+//https://www.baeldung.com/gradle-source-sets
+task printSourceSetInformation(){
+    doLast{
+        sourceSets.each { srcSet ->
+            println "["+srcSet.name+"]"
+            print "-->Source directories: "+srcSet.allJava.srcDirs+"\n"
+            print "-->Output directories: "+srcSet.output.classesDirs.files+"\n"
+			print "-->Configuration.testRuntime: "+configurations.testRuntime+"\n"
+			
+            println ""
+        }
+    }
+}
+

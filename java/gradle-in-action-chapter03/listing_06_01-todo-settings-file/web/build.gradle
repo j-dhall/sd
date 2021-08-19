@@ -23,3 +23,8 @@ dependencies {
 	runtime 'javax.servlet:jstl:1.1.2',
 			'taglibs:standard:1.1.2'
 }
+
+
+gretty {
+	httpPort = 8081
+}
