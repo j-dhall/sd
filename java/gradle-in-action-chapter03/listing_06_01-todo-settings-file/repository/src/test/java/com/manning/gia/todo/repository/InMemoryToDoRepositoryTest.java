@@ -20,7 +20,9 @@ public class InMemoryToDoRepositoryTest {
 		ToDoItem newToDoItem = new ToDoItem();
 		newToDoItem.setName("Write unit tests");
 		Long newId = inMemoryToDoRepository.insert(newToDoItem);
-		assertNotNull(newId);
+		//assertNotNull(newId);
+		assertNull(newId); //introduce error to test Jenkins post bild email notification functionality
+
 		ToDoItem persistedToDoItem = inMemoryToDoRepository.findById(newId);
 		assertNotNull(persistedToDoItem);
 		assertEquals(newToDoItem, persistedToDoItem);
