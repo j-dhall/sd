@@ -6,3 +6,8 @@ allprojects {
 subprojects {
 	apply plugin: 'java'
 }
+
+/*invoke gradle build by editing and git push
+19AUG2021
+~11:45 AM
+*/
