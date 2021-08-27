@@ -23,8 +23,16 @@ dependencies {
 }
 
 docker {
+
+	registryCredentials {
+		url = 'hub.docker.com' 
+		username = 'jeetendradhall'
+		password = 'welcomehere'
+	}
+
     springBootApplication {
         baseImage = 'openjdk:11'
+        images = ['jeetendradhall/helloworld:1.0.0', 'jeetendradhall/helloworld:latest']
     }
 }
 
