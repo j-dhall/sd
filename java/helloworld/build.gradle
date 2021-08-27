@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 	id 'war'
+	id 'com.bmuschko.docker-spring-boot-application' version '6.7.0'
 }
 
 group = 'com.cloudnative'
@@ -19,6 +20,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+docker {
+    springBootApplication {
+        baseImage = 'openjdk:11'
+    }
 }
 
 test {
