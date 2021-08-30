@@ -1,0 +1,7 @@
+apiVersion: getambassador.io/v2
+kind:  Mapping
+metadata:
+  name:  helloworld-mapping
+spec:
+  prefix: /helloworld/
+  service: helloworld-loadbalancer:8080
