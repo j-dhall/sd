@@ -32,7 +32,7 @@ docker {
 
     springBootApplication {
         baseImage = 'openjdk:11'
-        images = ['jeetendradhall/helloworld:3.0.0', 'jeetendradhall/helloworld:latest']
+        images = ['jeetendradhall/helloworld:4.0.0', 'jeetendradhall/helloworld:latest']
     }
 }
 
