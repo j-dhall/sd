@@ -1,0 +1,10 @@
+---
+apiVersion: x.getambassador.io/v3alpha1
+kind: AmbassadorMapping
+metadata:
+  name: quote-backend
+  namespace: ambassador
+spec:
+  hostname: "*"
+  prefix: /backend/
+  service: quote

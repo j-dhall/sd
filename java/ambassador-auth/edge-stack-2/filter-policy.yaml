@@ -1,0 +1,11 @@
+---
+apiVersion: getambassador.io/v2
+kind: FilterPolicy
+metadata:
+  name: authentication
+spec:
+  rules:
+  - host: "*"
+    path: /backend/get-quote/
+    filters:
+    - name: authentication
