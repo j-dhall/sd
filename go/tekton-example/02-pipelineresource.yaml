@@ -6,6 +6,6 @@ spec:
   type: git
   params:
     - name: url
-      value: https://github.com/arthurk/tekton-example
+      value: https://github.com/j-dhall/sd/tree/gh-pages/go/tekton-example
     - name: revision
       value: master
