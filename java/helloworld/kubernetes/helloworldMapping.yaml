@@ -4,4 +4,4 @@ metadata:
   name:  helloworld-mapping
 spec:
   prefix: /helloworld/
-  service: helloworld-loadbalancer:8080
+  service: helloworld-loadbalancer:80
